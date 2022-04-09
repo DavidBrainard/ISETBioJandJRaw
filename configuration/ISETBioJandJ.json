@@ -3,14 +3,14 @@
 		"flavor": "",
 		"hook": "",
 		"importance": "",
-		"localHookTemplate": "configuration/ISETJandJLocalHookTemplate.m",
+		"localHookTemplate": "configuration/ISETBioJandJLocalHookTemplate.m",
 		"name": "ISETJandJ",
 		"pathPlacement": "append",
 		"subfolder": ["toolbox", "tutorials", "compute"],
 		"toolboxRoot": "",
 		"type": "git",
 		"update": "",
-		"url": "https://github.com/isetbio/ISETJandJ.git"
+		"url": "https://github.com/DavidBrainard/ISETBioJandJ.git"
 	},
     {
 		"flavor": "",

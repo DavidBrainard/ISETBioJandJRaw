@@ -1,12 +1,12 @@
-% ISETJandJLocalHookTemplate
+% ISETBioJandJLocalHookTemplate
 %
 % Template for setting preferences and other configuration things, for the
-% ISETJandJ project.
+% ISETBioJandJ project.
 
-% 10/23/18  NPC   Wrote it.
+% 04/09/22  NPC   Wrote it.
 
 %% Define project
-projectName = 'ISETJandJ';
+projectName = 'ISETBioJandJ';
 
 %% Clear out old preferences
 if (ispref(projectName))
@@ -14,7 +14,7 @@ if (ispref(projectName))
 end
 
 %% Specify project location
-projectBaseDir = tbLocateProject('ISETJandJ');
+projectBaseDir = tbLocateProject(projectName);
 
 %% Specificy generatedData dir location
 computerInfo = GetComputerInfo;
