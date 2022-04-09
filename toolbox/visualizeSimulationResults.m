@@ -7,14 +7,17 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
 
     % Generate scenes for sizes at which performance is [0.4 0.6 and 0.8]
     performanceValuesExamined = [0.26 0.4 0.6];
-    performanceValuesExamined = [0.95];
 
     hFig = figure(3); clf;
     set(hFig, 'Position', [10 10 1500 350], 'Color', [1 1 1]);
 
-    visualizeNoiseFreeMosaicActivation = true;
+    visualizeNoiseFreeMosaicActivation = ~true;
     if (visualizeNoiseFreeMosaicActivation == false)
+        % If we generate a video of noisy response instances, do so for a high-performance value
+        % and also increase the mosaic integration time to 2 seconds
         performanceValuesExamined = 0.95;
+        theNeuralEngine.neuralPipeline.coneMosaic.integrationTime = 2;
+
         set(hFig, 'Position', [10 10 1500 350], 'Color', [1 1 1]);
         videoOBJ = VideoWriter('NoisyModulations', 'MPEG-4');
         videoOBJ.FrameRate = 10;
@@ -68,6 +71,7 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
                 theBackgroundOI = oiCompute(theBackgroundScene, theNeuralEngine.neuralPipeline.optics);
             end
 
+            
             % Compute cone mosaic activations to the test scene
             [theNoiseFreeConeMosaicActivation, noisyResponseInstances] = ...
                 theNeuralEngine.neuralPipeline.coneMosaic.compute(theOI, 'nTrials', 64);
@@ -79,14 +83,12 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
             end
 
             % Compute noise-free cone modulations
-            theNoiseFreeConeMosaicModulation = ...
-                (theNoiseFreeConeMosaicActivation-theNoiseFreeBackgroundConeMosaicActivation)./theNoiseFreeBackgroundConeMosaicActivation;
+            theNoiseFreeConeMosaicModulation = excitationsToModulations(...
+                theNoiseFreeConeMosaicActivation, theNoiseFreeBackgroundConeMosaicActivation);
 
             % Compute noisy cone modulations
-            for iTrial = 1:size(noisyResponseInstances,1)
-                theNoisyConeMosaicModulations(iTrial,:,:) = ...
-                    (noisyResponseInstances(iTrial,:,:) - theNoiseFreeBackgroundConeMosaicActivation)./theNoiseFreeBackgroundConeMosaicActivation;
-            end
+            theNoisyConeMosaicModulations = excitationsToModulations(...
+                noisyResponseInstances, theNoiseFreeBackgroundConeMosaicActivation);
 
             domainVisualizationTicks = struct('x', -0.1:0.1:0.1, 'y', -0.1:0.1:0.1);
             domainVisualizationTicksForThisPlot = domainVisualizationTicks ;

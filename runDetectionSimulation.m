@@ -6,40 +6,40 @@
 %% Init
 close all
 clear
-addpath(genpath(pwd))
 
 %% Basic parameters
-% Stimulus size & rotation
-letterRotationDegs = 0;
-letterSizePixels = 20;
-scaleFactor = 1;
-letterSizeDegs = 0.132*scaleFactor;
 
 % Cone mosaic integration time
-mosaiIntegrationTime = 30/1000;
+mosaiIntegrationTime = 40/1000;
 
 % How many cone mosaic response instances to compute
 nTrials = 1024;
 
-%% Generate simulation components
+%% Configure the tumbling E scene engines
+% 0 deg rotation
+letterRotationDegs = 0;
+tumblingEsceneEngine0degs = createTumblingEsceneEngine(letterRotationDegs);
 
-% Generate the presentation display with a viewing distance such that
-% each character, which is letterSizePixels tall, has the desired angular size: letterSizeDegs
-plotCharacteristics = ~true;
-thePresentationDisplay = generateBVAMSWhiteDisplay(...
-    letterSizeDegs, letterSizePixels, plotCharacteristics);
+% Configure background scene engine
+sceneParams = tumblingEsceneEngine0degs.sceneComputeFunction();
+backgroundSceneParams = sceneParams;
+backgroundSceneParams.chromaSpecification.foregroundRGB = sceneParams.chromaSpecification.backgroundRGB;
+backgroundSceneEngine = createTumblingEsceneEngine(0, 'customSceneParams', backgroundSceneParams);
 
-% Generate the E scene with 0 deg rotation
-[theTestScene, theBackgroundScene] = generateOptotypeScene(...
-    thePresentationDisplay, 'E', letterRotationDegs, ...
-    'visualizeScene', true);
+%% Generate the test and null (background) scene at a size of 0.1 degs
+sizeDegs = 0.1;
+sceneSequence = tumblingEsceneEngine0degs.compute(sizeDegs);
+theTestScene = sceneSequence{1};
+sceneSequence = backgroundSceneEngine.compute(sizeDegs);
+theBackgroundScene = sceneSequence{1};
 
 % Generate the custom PSF optics
 theOptics = generateCustomOptics();
 
-% Generate a mosaic appropriate for the stimulus
-theConeMosaic = generateCustomConeMosaic(mosaiIntegrationTime, ...
-    theOptics, theBackgroundScene);
+% Generate a cone mosaic that is 20% larger than the stimulus
+mosaicSizeDegs(1) = sceneGet(theBackgroundScene, 'wangular');
+mosaicSizeDegs(2) = sceneGet(theBackgroundScene, 'hangular');
+theConeMosaic = generateCustomConeMosaic(mosaiIntegrationTime, theOptics, mosaicSizeDegs*1.2);
 
 %% Compute
 % Compute the optical image for the test scene
