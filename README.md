@@ -12,7 +12,7 @@ These results are for a 300 msec integration time.
   title="Noise-free cone mosaic response instances"
   style="display: inline-block; margin: 0 auto; max-width: 300px">
   
-Noisy response instances and noise-free cone mosaic responses to a larger stimulus which results in Pcorrect = 0.95 are shown below.
+Noisy response instances and noise-free cone mosaic responses to a 0.152 degs which results in Pcorrect = 0.95 are shown below.
 These results are also for a 300 msec integration time.
 
 <img
