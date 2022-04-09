@@ -5,24 +5,34 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
     fittedPsychometricFunction = questObj.qpPF(questObj.estDomain', fittedPsychometricParams);
     examinedParameterAxis = 10.^(questObj.estDomain)*thresholdParameters.maxParamValue;
 
-    % Generate scenes for sizes at which performance is [0.4 0.6 and 0.8]
-    performanceValuesExamined = [0.26 0.4 0.6];
+
 
     hFig = figure(3); clf;
-    set(hFig, 'Position', [10 10 1500 350], 'Color', [1 1 1]);
+    
 
-    visualizeNoiseFreeMosaicActivation = ~true;
+    % Flag indicating whether to visualize the noise-free cone mosaic
+    % excitations or noisy instances (generates a video)
+    visualizeNoiseFreeMosaicActivation = true;
+
     if (visualizeNoiseFreeMosaicActivation == false)
         % If we generate a video of noisy response instances, do so for a high-performance value
         % and also increase the mosaic integration time to 2 seconds
         performanceValuesExamined = 0.95;
         theNeuralEngine.neuralPipeline.coneMosaic.integrationTime = 2;
 
+        % Figure setup
         set(hFig, 'Position', [10 10 1500 350], 'Color', [1 1 1]);
+
+        % Video setup
         videoOBJ = VideoWriter('NoisyModulations', 'MPEG-4');
         videoOBJ.FrameRate = 10;
         videoOBJ.Quality = 100;
         videoOBJ.open();
+    else
+        % Performance levels to examine
+        performanceValuesExamined = [0.26 0.4 0.6];
+        % Figure setup
+        set(hFig, 'Position', [10 10 1500 1000], 'Color', [1 1 1]);
     end
 
     activationColorMap = brewermap(1024, '*RdBu');
