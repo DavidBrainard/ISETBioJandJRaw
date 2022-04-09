@@ -1,2 +1,1 @@
-# ISETBioJandJ
-Psychophysical performance modeling
+# ISETJandJ
