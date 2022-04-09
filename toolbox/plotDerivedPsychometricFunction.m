@@ -42,4 +42,8 @@ function plotDerivedPsychometricFunction(questObj, threshold, ...
     set(gca, 'YTick', 0:0.1:1, 'XTick', [0.01 0.03 0.06 0.1 0.2 0.3 0.6], 'XScale', 'log', 'XLim', [parameterValuesExamined(1) parameterValuesExamined(end)]);
     grid on; box off
     title(sprintf('threshold: %2.3f degs', threshold));
+
+    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'performance.pdf'];
+    NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end
