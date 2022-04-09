@@ -27,5 +27,5 @@ The custom PSFs are depicted below for 500nm, 550nm, and 600nm on top of the emp
   src="/figures/PSFsAndConeMosaic.png"
   alt="Alt text"
   title="Noisy cone mosaic response instances"
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
+  style="display: inline-block; margin: 0 auto; max-width: 30px">
   
