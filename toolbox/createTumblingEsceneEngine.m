@@ -46,7 +46,7 @@ function dataOut = sceTumblingEscene(sceneEngineOBJ, testEsizeDegs, sceneParams)
         testEsizeDegs, sceneParams.letterHeightPixels, sceneParams.plotDisplayCharacteristics);
 
     % Generate the E scene with 0 deg rotation
-    theTestScene = generateTumbingEscene(...
+    theTestScene = generateTumblingEscene(...
         presentationDisplay, 'E', sceneParams, ...
         'visualizeScene', sceneParams.visualizeScene);
 
@@ -57,7 +57,7 @@ function dataOut = sceTumblingEscene(sceneEngineOBJ, testEsizeDegs, sceneParams)
 end
 
 
-function theScene = generateTumbingEscene(...
+function theScene = generateTumblingEscene(...
     presentationDisplay, theChar, sceneParams, varargin)
 
     % Parse optional input
