@@ -1,8 +1,16 @@
 function testTumblingEsceneEngine()
 
+    % Obtain the default params for the tumblingEscene engine
+    defaultParams = sceTumblingEscene();
+    
+    % Set the plotDisplayCharacteristics field to true to visualize the
+    % display SPDs and gamma functions
+    customSceneParams = defaultParams;
+    customSceneParams.plotDisplayCharacteristics = true;
+    
     % Generate sceneEngine for 0 deg rotation E
     letterRotationDegs = 0;
-    tumblingEsceneEngine0degs = createTumblingEsceneEngine(letterRotationDegs);
+    tumblingEsceneEngine0degs = createTumblingEsceneEngine(letterRotationDegs, 'customSceneParams', customSceneParams);
 
     % Generate sceneEngine for 90 deg rotation E
     letterRotationDegs = 90;

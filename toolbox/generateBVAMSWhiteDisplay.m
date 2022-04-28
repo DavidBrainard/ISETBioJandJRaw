@@ -3,7 +3,6 @@ function presentationDisplay = generateBVAMSWhiteDisplay(...
     load('BVAMS_White.mat');
 
     wave = 380:770; wave = wave';
-    spd = spd/numel(wave);
     
     ambient = zeros(1,length(wave)); 
     ambient = ambient';
