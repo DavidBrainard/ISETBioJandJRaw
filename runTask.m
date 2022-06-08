@@ -13,10 +13,13 @@ function runTask()
         'letterSizesNumExamined',  8, ...                           % How many sizes to use for sampling the psychometric curve
         'maxLetterSizeDegs', 0.4, ...                               % The maximumum letter size in degrees of visual angle
         'mosaicIntegrationTimeSeconds', 300/1000, ...               % Integration time, here 300 msec
-        'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
-        'thresholdP', 0.60 ...                                      % Probability correct level for estimating threshold performance
+        'nTest', 8, ...                                             % Number of trial to use for computing Pcorrect
+        'thresholdP', 0.60, ...                                     % Probability correct level for estimating threshold performance
+        'visualizedPSFwavelengths', [], ...                         % Vectror with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
+        'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
+        'visualizeScene', ~true ...                                 % Flag, indicating whether to visualize one of the scenes
     );
-
+    
     tic
     runSimulation(params);
     toc
@@ -36,6 +39,13 @@ function runSimulation(params)
     % Generate optics from custom PSFs
     theCustomPSFOptics = generateCustomOptics(psfDataFile);
 
+    % Visualization of the PSF stack
+    if (~isempty(params.visualizedPSFwavelengths))
+        psfRangeArcMin = 10;
+        visualizePSFstack(theCustomPSFOptics, params.visualizedPSFwavelengths, psfRangeArcMin)
+    end
+    
+    
     % Generate cone mosaic to use
     mosaicSizeDegs = maxLetterSizeDegs*1.25*[1 1];
     theConeMosaic = generateCustomConeMosaic(...
@@ -96,9 +106,23 @@ function runSimulation(params)
     % so we can set certain scene params of interest
     theSceneEngine = createTumblingEsceneEngine(0);
     customSceneParams = theSceneEngine.sceneComputeFunction();
-    
+    customSceneParams.yPixelsNumMargin = 100;
+    customSceneParams.xPixelsNumMargin = 100;
     % Set the spdDataFile
     customSceneParams.spdDataFile = spdDataFile;
+        
+    if (params.visualizeDisplayCharacteristics)
+        visualizationSceneParams = customSceneParams;
+        visualizationSceneParams.plotDisplayCharacteristics = true;
+        theSceneEngine.sceneComputeFunction(theSceneEngine,0.3, visualizationSceneParams);
+    end
+    
+    if (params.visualizeScene)
+        visualizationSceneParams = customSceneParams;
+        visualizationSceneParams.visualizeScene = true;
+        theSceneEngine.sceneComputeFunction(theSceneEngine,0.3, visualizationSceneParams);
+    end
+    
     clear 'theSceneEngine';
     
     % Generate scene engines for the tumbling E's (4 orientations)

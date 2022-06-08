@@ -8,7 +8,9 @@ function checkSPDs()
     
     % BVAMS display
     testEsizeDegs = 0.2; nPixelRows = 10; plotDisplayCharacteristics = false;
-    BVAMSWhiteDisplay = generateBVAMSWhiteDisplay(testEsizeDegs, nPixelRows, plotDisplayCharacteristics);
+    spdDataFile = 'BVAMS_White_Guns_At_Max.mat';
+    ambientSPDDataFile = 'BVAMS_White_Background.mat';
+    BVAMSWhiteDisplay = generatePresentationDisplay(testEsizeDegs, nPixelRows, spdDataFile, ambientSPDDataFile, plotDisplayCharacteristics);
     
     % Generate scene rendered on Apple display
     theScene1 = generateSceneFromLinearRGBimage(linearRGBimage, AppleDisplay);
