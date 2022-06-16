@@ -1,12 +1,15 @@
 function testTumblingEsceneEngine()
 
     % Obtain the default params for the tumblingEscene engine
-    defaultParams = sceTumblingEscene();
+    theSceneEngine = createTumblingEsceneEngine(0);
+    defaultParams = theSceneEngine.sceneComputeFunction();
     
     % Set the plotDisplayCharacteristics field to true to visualize the
     % display SPDs and gamma functions
     customSceneParams = defaultParams;
     customSceneParams.plotDisplayCharacteristics = true;
+    % Specify datafile name for the display SPDs
+    customSceneParams.spdDataFile = 'BVAMS_White_Guns_At_Max.mat';
     
     % Generate sceneEngine for 0 deg rotation E
     letterRotationDegs = 0;
@@ -74,6 +77,7 @@ function testTumblingEsceneEngine()
             'spatialSupportInDegs', true, ...
             'crossHairsAtOrigin', true, ...
             'displayRadianceMaps', false, ...
+            'avoidAutomaticRGBscaling', true, ...
             'axesHandle', ax);
 
     ax = subplot(2,3,5);
@@ -81,6 +85,7 @@ function testTumblingEsceneEngine()
             'spatialSupportInDegs', true, ...
             'crossHairsAtOrigin', true, ...
             'displayRadianceMaps', false, ...
+            'avoidAutomaticRGBscaling', true, ...
             'axesHandle', ax);
 
     ax = subplot(2,3,6);
@@ -88,11 +93,7 @@ function testTumblingEsceneEngine()
             'spatialSupportInDegs', true, ...
             'crossHairsAtOrigin', true, ...
             'displayRadianceMaps', false, ...
+            'avoidAutomaticRGBscaling', true, ...
             'axesHandle', ax);
-
-
-
-
-
 
 end

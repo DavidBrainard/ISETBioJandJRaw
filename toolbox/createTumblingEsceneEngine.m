@@ -24,5 +24,4 @@ function tumblingEsceneEngine = createTumblingEsceneEngine(orientation, varargin
 
     % Instantiate a tumblingEsceneEngine
     tumblingEsceneEngine = sceneEngine(sceneComputeFunction, sceneParams);
-
 end
