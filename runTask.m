@@ -108,6 +108,10 @@ function runSimulation(params)
     customSceneParams = theSceneEngine.sceneComputeFunction();
     customSceneParams.yPixelsNumMargin = 100;
     customSceneParams.xPixelsNumMargin = 100;
+
+    % Change upsample factor if we want smaller pixels
+    % customSceneParams.upSampleFactor = 5;
+       
     % Set the spdDataFile
     customSceneParams.spdDataFile = spdDataFile;
         
