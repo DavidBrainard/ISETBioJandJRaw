@@ -2,13 +2,15 @@ function presentationDisplay = generatePresentationDisplay(...
     letterSizeDegs, letterSizePixels, spdDataFile, ambientSPDDataFile, plotCharacteristics)
 
     % Load the ambient SPD
-    fprintf('Loading ambient SPD from %s\n', ambientSPDDataFile);
-    load(ambientSPDDataFile, 'spd');
+    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+
+    fprintf('Loading ambient SPD from %s\n', fullfile(projectBaseDir,'data',ambientSPDDataFile));
+    load(fullfile(projectBaseDir,'data',ambientSPDDataFile), 'spd');
     ambientSPD = spd;
     clear 'spd'
     
     % Check data consistency
-    assert(size(ambientSPD, 2) == 4, 'The ambient SPD matrix must be an N x 4 matrix, with the first column being the spectral support');
+    assert(size(ambientSPD, 2) == 2, 'The ambient SPD matrix must be an N x 2 matrix, with the first column being the spectral support');
     if (size(ambientSPD,2) > 2)
         fprintf(2,'\nThe ambient SPD matrix must be an N x 2 matrix, with the first column being the spectral support and the second column being the ambient energy.\n');
         fprintf(2,'The data retrieved from ''%s'', contain %d columns. Ignoring all but the first 2 columns.\n\n', ambientSPDDataFile, size(ambientSPD,2));
@@ -19,8 +21,8 @@ function presentationDisplay = generatePresentationDisplay(...
     ambientSPD = ambientSPD/ (ambientWave(2)-ambientWave(1));
     
     % Load the RGB SPDs
-    fprintf('Loading SPDs from %s\n', spdDataFile);
-    load(spdDataFile, 'spd');
+    fprintf('Loading SPDs from %s\n', fullfile(projectBaseDir,'data',spdDataFile));
+    load(fullfile(projectBaseDir,'data',spdDataFile), 'spd');
     
     % Check data consistency
     assert(size(spd, 2) == 4, 'The SPD matrix must be an N x 4 matrix, with the first column being the spectral support');

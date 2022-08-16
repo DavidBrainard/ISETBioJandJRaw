@@ -6,22 +6,42 @@ function runTask()
     % Close all figures
     close all;
 
-    % Parameters
+    % Parameters    
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
-        'psfDataFile', 'Uniform_FullVis_LCA_high_TCA_zero.mat',...  % Datafile containing the PSF data
+        'psfDataFile', '',...                                       % Datafile containing the PSF data
         'letterSizesNumExamined',  8, ...                           % How many sizes to use for sampling the psychometric curve
-        'maxLetterSizeDegs', 0.4, ...                               % The maximumum letter size in degrees of visual angle
-        'mosaicIntegrationTimeSeconds', 300/1000, ...               % Integration time, here 300 msec
-        'nTest', 8, ...                                             % Number of trial to use for computing Pcorrect
-        'thresholdP', 0.60, ...                                     % Probability correct level for estimating threshold performance
-        'visualizedPSFwavelengths', [], ...                         % Vectror with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
+        'maxLetterSizeDegs', 0.3, ...                               % The maximum letter size in degrees of visual angle
+        'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
+        'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
+        'nTest', 64, ...                                            % Number of trial to use for computing Pcorrect
+        'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
+        'visualizedPSFwavelengths', [], ... %380:10:770, ...        % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
         'visualizeScene', ~true ...                                 % Flag, indicating whether to visualize one of the scenes
     );
-    
+
+    examinedPSFDataFiles = {...
+        'Uniform_FullVis_LCA_zero_TCA_zero.mat' ...
+        'Uniform_FullVis_LCA_low_TCA_zero.mat' ...
+        'Uniform_FullVis_LCA_high_TCA_zero.mat' ...
+        'Uniform_FullVis_LCA_zero_TCA_low.mat' ...
+        'Uniform_FullVis_LCA_low_TCA_low.mat' ...
+        'Uniform_FullVis_LCA_high_TCA_low.mat' ...
+        'Uniform_FullVis_LCA_zero_TCA_high.mat' ...
+        'Uniform_FullVis_LCA_low_TCA_high.mat' ...
+        'Uniform_FullVis_LCA_high_TCA_high.mat' ...
+        };
+
+    examinedPSFDataFiles = {...
+         'Uniform_FullVis_LCA_low_TCA_zero.mat' ...
+        };
+
     tic
-    runSimulation(params);
+    for iPSF = 1:numel(examinedPSFDataFiles)
+        params.psfDataFile = examinedPSFDataFiles{iPSF};
+        runSimulation(params);
+    end
     toc
 end
 
@@ -110,7 +130,7 @@ function runSimulation(params)
     customSceneParams.xPixelsNumMargin = 100;
 
     % Change upsample factor if we want smaller pixels
-    % customSceneParams.upSampleFactor = 5;
+    customSceneParams.upSampleFactor = uint8(params.sceneUpSampleFactor);
        
     % Set the spdDataFile
     customSceneParams.spdDataFile = spdDataFile;
@@ -147,18 +167,22 @@ function runSimulation(params)
     [threshold, questObj, psychometricFunction, fittedPsychometricParams] = computeParameterThreshold(...
             tumblingEsceneEngines, theNeuralEngine, classifierEngine, ...
             classifierPara, thresholdParameters, questEnginePara, ...
-            'visualizeAllComponents', true);
+            'visualizeAllComponents', ~true);
 
     % Plot the derived psychometric function
-    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, thresholdParameters);
+    pdfFileName = sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
+    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, thresholdParameters, pdfFileName);
 
+    pdfFileName = sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
     visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
-        thresholdParameters, tumblingEsceneEngines, theNeuralEngine);
+        thresholdParameters, tumblingEsceneEngines, theNeuralEngine, pdfFileName);
 
     % Export the results
+    exportFileName = sprintf('Results_%s_Reps_%d.mat', strrep(params.psfDataFile, '.mat', ''), nTest);
     exportSimulation(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, classifierPara, questEnginePara, ...
-        tumblingEsceneEngines, theNeuralEngine, classifierEngine);
+        tumblingEsceneEngines, theNeuralEngine, classifierEngine, ...
+        exportFileName);
 
 end
 

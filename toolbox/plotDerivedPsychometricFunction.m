@@ -1,5 +1,5 @@
 function plotDerivedPsychometricFunction(questObj, threshold, ...
-    fittedPsychometricParams, thresholdParameters)
+    fittedPsychometricParams, thresholdParameters, pdfFileName)
 
     % Retrieve the parameter values that Quest examined performance
     [stimVec, responseVec] = questObj.combineData();
@@ -44,6 +44,6 @@ function plotDerivedPsychometricFunction(questObj, threshold, ...
     title(sprintf('threshold: %2.3f degs', threshold));
 
     projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
-    pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'performance.pdf'];
+    pdfFile = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end
