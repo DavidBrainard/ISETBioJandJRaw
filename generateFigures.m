@@ -11,7 +11,7 @@ params = struct(...
     'maxLetterSizeDegs', 0.4, ...                               % The maximum letter size in degrees of visual angle
     'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
     'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
-    'nTest', 2, ...                                            % Number of trial to use for computing Pcorrect
+    'nTest', 128, ...                                            % Number of trial to use for computing Pcorrect
     'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
     'visualizedPSFwavelengths', [], ... %380:10:770, ...        % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
     'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
@@ -30,8 +30,28 @@ examinedPSFDataFiles = {...
     'Uniform_FullVis_LCA_high_TCA_high.mat' ...
     };
 
+examinedPSFDataFiles = {...
+    'Uniform_FullVis_LCA_zero_TCA_zero.mat' ...
+    'Uniform_FullVis_LCA_low_TCA_zero.mat' ...
+    'Uniform_FullVis_LCA_high_TCA_zero.mat' ...
+    'Uniform_FullVis_LCA_zero_TCA_low.mat' ...
+    'Uniform_FullVis_LCA_low_TCA_low.mat' ...
+    'Uniform_FullVis_LCA_high_TCA_low.mat' ...
+    };
+
+
 for iOptics = 1:numel(examinedPSFDataFiles)
     examinedPSFDataFile = examinedPSFDataFiles{iOptics};
+
+    resultsDataFileName = sprintf('Results_%s_Reps_%d.mat', strrep(examinedPSFDataFile, '.mat', ''), params.nTest);
+    load(resultsDataFileName, ...
+            'fittedPsychometricParams','questObj', 'thresholdParameters', 'threshold');
+    
+    pdfFileName = sprintf('Performance_%s_Reps_%d.pdf', strrep(examinedPSFDataFile, '.mat', ''), params.nTest);
+        
+    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
+            thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
+    continue;
 
     % Generate optics from custom PSFs
     theCustomPSFOptics = generateCustomOptics(examinedPSFDataFile);
@@ -101,18 +121,6 @@ for iOptics = 1:numel(examinedPSFDataFiles)
     for iSize = 1:numel(sizesDegs)
         desiredSizeDegs = sizesDegs(iSize);
 
-        resultsDataFileName = sprintf('Results_%s_%2.2fDegs.mat', strrep(strrep(examinedPSFDataFile, 'Uniform_FullVis_', ''), '.mat', ''), desiredSizeDegs);
-        load(resultsDataFileName, ...
-            'fittedPsychometricParams','questObj', 'thresholdParameters', 'threshold');
-    
-        fittedPsychometricFunction = questObj.qpPF(questObj.estDomain', fittedPsychometricParams);
-        examinedParameterAxis = 10.^(questObj.estDomain)*thresholdParameters.maxParamValue;
-        
-        pdfFileName = sprintf('Performance_%s_%2.2fDegs.pdf', strrep(strrep(examinedPSFDataFile, 'Uniform_FullVis_', ''), '.mat', ''), desiredSizeDegs);
-        
-        plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
-            thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
-        pause
 
         pdfFileName = sprintf('%s_%2.2fDegs.pdf', strrep(strrep(examinedPSFDataFile, 'Uniform_FullVis_', ''), '.mat', ''), desiredSizeDegs);
     
