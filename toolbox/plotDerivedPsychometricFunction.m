@@ -1,5 +1,10 @@
 function plotDerivedPsychometricFunction(questObj, threshold, ...
-    fittedPsychometricParams, thresholdParameters, pdfFileName)
+    fittedPsychometricParams, thresholdParameters, pdfFileName, varargin)
+
+    p = inputParser;
+    p.addParameter('xRange', []);
+    p.parse(varargin{:});
+    xRange = p.Results.xRange;
 
     % Retrieve the parameter values that Quest examined performance
     [stimVec, responseVec] = questObj.combineData();
@@ -28,7 +33,11 @@ function plotDerivedPsychometricFunction(questObj, threshold, ...
         'filled', 'MarkerFaceColor', [1 0.5 0.5], 'MarkerEdgeColor', [1 0. 0.], 'MarkerFaceAlpha', 0.5, 'LineWidth', 1.5);
 
     % Plot the computed threshold
-    plot([parameterValuesExamined(1) threshold], thresholdParameters.thresholdCriterion*[1 1], 'k--', 'LineWidth', 1.5);
+    if (~isempty(xRange))
+        plot([xRange(1) threshold], thresholdParameters.thresholdCriterion*[1 1], 'k--', 'LineWidth', 1.5);
+    else
+        plot([parameterValuesExamined(1) threshold], thresholdParameters.thresholdCriterion*[1 1], 'k--', 'LineWidth', 1.5);
+    end
     plot(threshold*[1 1], [0 thresholdParameters.thresholdCriterion], 'k--', 'LineWidth', 1.5);
     plot(threshold, 0.03, 'kv', 'MarkerSize', 12, 'LineWidth', 1.5, 'MarkerFaceColor', [1 0.9 0.9], 'MarkerEdgeColor', [0 0. 0.]);
     
@@ -39,7 +48,13 @@ function plotDerivedPsychometricFunction(questObj, threshold, ...
     ylabel('Pcorrect');
 
     set(gca, 'FontSize', 16);
-    set(gca, 'YTick', 0:0.1:1, 'XTick', [0.01 0.03 0.06 0.1 0.2 0.3 0.6], 'XScale', 'log', 'XLim', [parameterValuesExamined(1) parameterValuesExamined(end)]);
+    set(gca, 'YTick', 0:0.1:1, 'XTick', [0.01 0.03 0.06 0.1 0.2 0.3 0.6], ...
+        'XScale', 'log', 'XLim', [parameterValuesExamined(1) parameterValuesExamined(end)]);
+
+    if (~isempty(xRange))
+        set(gca, 'XLim', xRange);
+    end
+
     grid on; box off
     title(sprintf('threshold: %2.3f degs', threshold));
 

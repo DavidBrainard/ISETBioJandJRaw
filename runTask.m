@@ -10,11 +10,11 @@ function runTask()
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
         'psfDataFile', '',...                                       % Datafile containing the PSF data
-        'letterSizesNumExamined',  8, ...                           % How many sizes to use for sampling the psychometric curve
-        'maxLetterSizeDegs', 0.3, ...                               % The maximum letter size in degrees of visual angle
+        'letterSizesNumExamined',  5, ...                           % How many sizes to use for sampling the psychometric curve
+        'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
         'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
-        'nTest', 64, ...                                            % Number of trial to use for computing Pcorrect
+        'nTest', 128, ...                                            % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
         'visualizedPSFwavelengths', [], ... %380:10:770, ...        % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
@@ -34,7 +34,7 @@ function runTask()
         };
 
     examinedPSFDataFiles = {...
-         'Uniform_FullVis_LCA_low_TCA_zero.mat' ...
+         'Uniform_FullVis_LCA_high_TCA_high.mat' ...
         };
 
     tic

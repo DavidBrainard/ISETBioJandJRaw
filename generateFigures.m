@@ -1,5 +1,8 @@
 function generateFigures()
 
+
+
+
 % Parameters    
 params = struct(...
     'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
@@ -97,6 +100,20 @@ for iOptics = 1:numel(examinedPSFDataFiles)
     sizesDegs = [0.06 0.08 0.1 0.2 0.35];
     for iSize = 1:numel(sizesDegs)
         desiredSizeDegs = sizesDegs(iSize);
+
+        resultsDataFileName = sprintf('Results_%s_%2.2fDegs.mat', strrep(strrep(examinedPSFDataFile, 'Uniform_FullVis_', ''), '.mat', ''), desiredSizeDegs);
+        load(resultsDataFileName, ...
+            'fittedPsychometricParams','questObj', 'thresholdParameters', 'threshold');
+    
+        fittedPsychometricFunction = questObj.qpPF(questObj.estDomain', fittedPsychometricParams);
+        examinedParameterAxis = 10.^(questObj.estDomain)*thresholdParameters.maxParamValue;
+        
+        pdfFileName = sprintf('Performance_%s_%2.2fDegs.pdf', strrep(strrep(examinedPSFDataFile, 'Uniform_FullVis_', ''), '.mat', ''), desiredSizeDegs);
+        
+        plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
+            thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
+        pause
+
         pdfFileName = sprintf('%s_%2.2fDegs.pdf', strrep(strrep(examinedPSFDataFile, 'Uniform_FullVis_', ''), '.mat', ''), desiredSizeDegs);
     
         visualizationSceneParams = customSceneParams;
