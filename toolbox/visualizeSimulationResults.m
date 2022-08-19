@@ -109,8 +109,6 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
                 domainVisualizationTicksForThisPlot.y = [];
             end
 
-            size(theNoiseFreeConeMosaicModulation)
-            size(theNeuralEngine.neuralPipeline.coneMosaic.coneRFpositionsDegs)
             d = sqrt(sum(theNeuralEngine.neuralPipeline.coneMosaic.coneRFpositionsDegs.^2,2));
             roiConeIndices = find(d<0.1);
             maxModulation = max(abs(theNoiseFreeConeMosaicModulation(roiConeIndices)));
