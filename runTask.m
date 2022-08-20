@@ -9,6 +9,7 @@ function runTask()
     % Parameters    
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
+        'psfDataSubDir', 'FullVis_PSFs_10nm_Subject9', ...         % Subdir where the PSF data live
         'psfDataFile', '',...                                       % Datafile containing the PSF data
         'letterSizesNumExamined',  5, ...                           % How many sizes to use for sampling the psychometric curve
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
@@ -33,19 +34,18 @@ function runTask()
         'Uniform_FullVis_LCA_high_TCA_high.mat' ...
         };
 
-    examinedPSFDataFiles = {...
-         'Uniform_FullVis_LCA_high_TCA_high.mat' ...
-        };
 
-    tic
+    theConeMosaic = [];
     for iPSF = 1:numel(examinedPSFDataFiles)
+        tic
         params.psfDataFile = examinedPSFDataFiles{iPSF};
-        runSimulation(params);
+        theConeMosaic = runSimulation(params, theConeMosaic);
+        toc
     end
-    toc
+    
 end
 
-function runSimulation(params)
+function theConeMosaic = runSimulation(params, theConeMosaic)
 
     % Unpack simulation params
     letterSizesNumExamined = params.letterSizesNumExamined;
@@ -54,7 +54,7 @@ function runSimulation(params)
     nTest = params.nTest;
     thresholdP = params.thresholdP;
     spdDataFile = params.spdDataFile;
-    psfDataFile = params.psfDataFile;
+    psfDataFile = fullfile(params.psfDataSubDir, params.psfDataFile);
     
     % Generate optics from custom PSFs
     theCustomPSFOptics = generateCustomOptics(psfDataFile);
@@ -65,13 +65,15 @@ function runSimulation(params)
         visualizePSFstack(theCustomPSFOptics, params.visualizedPSFwavelengths, psfRangeArcMin)
     end
     
-    
-    % Generate cone mosaic to use
-    mosaicSizeDegs = maxLetterSizeDegs*1.25*[1 1];
-    theConeMosaic = generateCustomConeMosaic(...
-        mosaicIntegrationTimeSeconds, ...
-        theCustomPSFOptics, ...
-        mosaicSizeDegs);
+    if isempty(theConeMosaic)
+        % Generate cone mosaic to use
+        mosaicSizeDegs = maxLetterSizeDegs*1.25*[1 1];
+        theConeMosaic = generateCustomConeMosaic(...
+            mosaicIntegrationTimeSeconds, ...
+            theCustomPSFOptics, ...
+            mosaicSizeDegs);
+    end
+
 
     %% Create neural response engine
     %
