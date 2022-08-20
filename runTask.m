@@ -171,7 +171,8 @@ function runSimulation(params)
 
     % Plot the derived psychometric function
     pdfFileName = sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
-    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, thresholdParameters, pdfFileName);
+    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
+        thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
 
     pdfFileName = sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
     visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
