@@ -65,7 +65,7 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
         visualizePSFstack(theCustomPSFOptics, params.visualizedPSFwavelengths, psfRangeArcMin)
     end
     
-    if isempty(theConeMosaic)
+    if (isempty(theConeMosaic))
         % Generate cone mosaic to use
         mosaicSizeDegs = maxLetterSizeDegs*1.25*[1 1];
         theConeMosaic = generateCustomConeMosaic(...
