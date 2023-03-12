@@ -1,6 +1,9 @@
-function theOI = generateCustomOptics()
+function theOI = generateCustomOptics(psfDataFile)
 
-    load('Uniform_FullVis_LCA_high_TCA_zero.mat', 'opticsParams', 'thePSFensemble')
+    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+
+    fprintf('Loading custom PSF data from %s\n', fullfile(projectBaseDir,'data',psfDataFile));
+    load(fullfile(projectBaseDir,'data',psfDataFile), 'opticsParams', 'thePSFensemble');
     
     % Reshape the PSFs from even-shaped to odd-shaped
     if (rem(numel(opticsParams.spatialSupportArcMin),2) == 0)

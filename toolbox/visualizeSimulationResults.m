@@ -1,25 +1,38 @@
 function visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
-    thresholdParameters, tumblingEsceneEngines, theNeuralEngine)
+    thresholdParameters, tumblingEsceneEngines, theNeuralEngine, pdfFileName)
 
     % Choose which sizes to display
     fittedPsychometricFunction = questObj.qpPF(questObj.estDomain', fittedPsychometricParams);
     examinedParameterAxis = 10.^(questObj.estDomain)*thresholdParameters.maxParamValue;
 
-    % Generate scenes for sizes at which performance is [0.4 0.6 and 0.8]
-    performanceValuesExamined = [0.26 0.4 0.6];
-    performanceValuesExamined = [0.95];
+
 
     hFig = figure(3); clf;
-    set(hFig, 'Position', [10 10 1500 350], 'Color', [1 1 1]);
+    
 
+    % Flag indicating whether to visualize the noise-free cone mosaic
+    % excitations or noisy instances (generates a video)
     visualizeNoiseFreeMosaicActivation = true;
+
     if (visualizeNoiseFreeMosaicActivation == false)
+        % If we generate a video of noisy response instances, do so for a high-performance value
+        % and also increase the mosaic integration time to 2 seconds
         performanceValuesExamined = 0.95;
+        theNeuralEngine.neuralPipeline.coneMosaic.integrationTime = 2;
+
+        % Figure setup
         set(hFig, 'Position', [10 10 1500 350], 'Color', [1 1 1]);
+
+        % Video setup
         videoOBJ = VideoWriter('NoisyModulations', 'MPEG-4');
         videoOBJ.FrameRate = 10;
         videoOBJ.Quality = 100;
         videoOBJ.open();
+    else
+        % Performance levels to examine
+        performanceValuesExamined = [0.26 0.5 0.8];
+        % Figure setup
+        set(hFig, 'Position', [10 10 1500 1000], 'Color', [1 1 1]);
     end
 
     activationColorMap = brewermap(1024, '*RdBu');
@@ -68,9 +81,10 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
                 theBackgroundOI = oiCompute(theBackgroundScene, theNeuralEngine.neuralPipeline.optics);
             end
 
+            
             % Compute cone mosaic activations to the test scene
             [theNoiseFreeConeMosaicActivation, noisyResponseInstances] = ...
-                theNeuralEngine.neuralPipeline.coneMosaic.compute(theOI, 'nTrials', 64);
+                theNeuralEngine.neuralPipeline.coneMosaic.compute(theOI, 'nTrials', 4);
 
             if (letterRotationIndex == 1)
                 % Compute cone mosaic activations to the background scene
@@ -79,14 +93,12 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
             end
 
             % Compute noise-free cone modulations
-            theNoiseFreeConeMosaicModulation = ...
-                (theNoiseFreeConeMosaicActivation-theNoiseFreeBackgroundConeMosaicActivation)./theNoiseFreeBackgroundConeMosaicActivation;
+            theNoiseFreeConeMosaicModulation = 100*excitationsToModulations(...
+                theNoiseFreeConeMosaicActivation, theNoiseFreeBackgroundConeMosaicActivation);
 
             % Compute noisy cone modulations
-            for iTrial = 1:size(noisyResponseInstances,1)
-                theNoisyConeMosaicModulations(iTrial,:,:) = ...
-                    (noisyResponseInstances(iTrial,:,:) - theNoiseFreeBackgroundConeMosaicActivation)./theNoiseFreeBackgroundConeMosaicActivation;
-            end
+            theNoisyConeMosaicModulations = 100*excitationsToModulations(...
+                noisyResponseInstances, theNoiseFreeBackgroundConeMosaicActivation);
 
             domainVisualizationTicks = struct('x', -0.1:0.1:0.1, 'y', -0.1:0.1:0.1);
             domainVisualizationTicksForThisPlot = domainVisualizationTicks ;
@@ -97,12 +109,16 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
                 domainVisualizationTicksForThisPlot.y = [];
             end
 
+            d = sqrt(sum(theNeuralEngine.neuralPipeline.coneMosaic.coneRFpositionsDegs.^2,2));
+            roiConeIndices = find(d<0.1);
+            maxModulation = max(abs(theNoiseFreeConeMosaicModulation(roiConeIndices)));
+
             ax = subplot('Position', subplotPosVectors(letterSizeIndex, letterRotationIndex).v);
             if (visualizeNoiseFreeMosaicActivation)
                 theNeuralEngine.neuralPipeline.coneMosaic.visualize(...
                     'figureHandle', hFig', 'axesHandle', ax, ...
                     'activation', theNoiseFreeConeMosaicModulation, ...
-                    'activationRange', max(abs(theNoiseFreeConeMosaicModulation(:)))*[-1 1], ...
+                    'activationRange', maxModulation*[-1 1], ...
                     'verticalActivationColorBar', true, ...
                     'activationColorMap', activationColorMap, ...
                     'colorbarTickLabelColor', [0.3 0.3 0.3],...
@@ -154,4 +170,7 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
     end
 
 
+    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    pdfFile = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
+    NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end
