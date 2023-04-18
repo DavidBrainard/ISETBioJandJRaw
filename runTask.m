@@ -36,7 +36,7 @@ function runTask()
 
 
     theConeMosaic = [];
-    for iPSF = 1:numel(examinedPSFDataFiles)
+    for iPSF = 1:numel(examinedPSFDataFiles{1})
         tic
         params.psfDataFile = examinedPSFDataFiles{iPSF};
         theConeMosaic = runSimulation(params, theConeMosaic);
