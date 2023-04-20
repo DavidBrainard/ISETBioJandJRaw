@@ -15,7 +15,7 @@ function runTask()
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
         'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
-        'nTest', 128, ...                                            % Number of trial to use for computing Pcorrect
+        'nTest', 512, ...                                            % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
         'visualizedPSFwavelengths', [], ... %380:10:770, ...        % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
