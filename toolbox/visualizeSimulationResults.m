@@ -58,7 +58,7 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
             % Generate a scene engine for the background scene (zero contrast)
             if (letterRotationIndex == 1)
                 sceneParams = sceneEngine.sceneComputeFunction();
-                backgroundSceneParams = sceneParams;
+                backgroundSceneParams = sceneEngine.sceneParams;
                 backgroundSceneParams.chromaSpecification.foregroundRGB = sceneParams.chromaSpecification.backgroundRGB;
                 backgroundSceneEngine = createTumblingEsceneEngine(0, 'customSceneParams', backgroundSceneParams);
             end
