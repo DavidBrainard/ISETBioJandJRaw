@@ -30,6 +30,7 @@ function dataOut = sceTumblingEscene(sceneEngineOBJ, testEsizeDegs, sceneParams)
     % Assemble dataOut struct - required fields
     dataOut.sceneSequence{1} = theTestScene;
     dataOut.temporalSupport(1) = 0;
+    dataOut.presentationDisplay = presentationDisplay;
     dataOut.statusReport = 'done';
 end
 
