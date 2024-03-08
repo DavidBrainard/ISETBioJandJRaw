@@ -17,6 +17,9 @@ function runTask()
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
+        'customMacularPigmentDensity', 0.4, ...                   % custom MPD, or empty to use the default
+        'customConeDensities', [0.6 0.3 0.1], ...                   % custom L-M-S ratio or empty to use default
+        'customPupilDiameterMM', 4, ...                            % custom pupil diameter in MM or empty to use the value from the psfDataFile
         'visualizedPSFwavelengths', [], ... %380:10:770, ...        % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
         'visualizeScene', ~true ...                                 % Flag, indicating whether to visualize one of the scenes
@@ -57,7 +60,7 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
     psfDataFile = fullfile(params.psfDataSubDir, params.psfDataFile);
     
     % Generate optics from custom PSFs
-    theCustomPSFOptics = generateCustomOptics(psfDataFile);
+    theCustomPSFOptics = generateCustomOptics(psfDataFile, params.customPupilDiameterMM);
 
     % Visualization of the PSF stack
     if (~isempty(params.visualizedPSFwavelengths))
@@ -71,7 +74,9 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
         theConeMosaic = generateCustomConeMosaic(...
             mosaicIntegrationTimeSeconds, ...
             theCustomPSFOptics, ...
-            mosaicSizeDegs);
+            mosaicSizeDegs, ...
+            'customMPD', params.customMacularPigmentDensity, ...
+            'customConeDensities', params.customConeDensities);
     end
 
 
@@ -183,10 +188,24 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
 
     % Export the results
     exportFileName = sprintf('Results_%s_Reps_%d.mat', strrep(params.psfDataFile, '.mat', ''), nTest);
+
+    if (~isempty(params.customMacularPigmentDensity))
+        exportFileName = strrep(exportFileName, '.mat', sprintf('customMPD_%2.2f.mat', params.customMacularPigmentDensity));
+    end
+    if (~isempty(params.customPupilDiameterMM))
+        exportFileName = strrep(exportFileName, '.mat', sprintf('customPupilDiamMM_%2.2f.mat', params.customPupilDiameterMM));
+    end
+    if (~isempty(params.customConeDensities))
+        exportFileName = strrep(exportFileName, '.mat', sprintf('customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
+    end
+
+    fprintf('Saving data to %s\n', exportFileName);
     exportSimulation(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, classifierPara, questEnginePara, ...
         tumblingEsceneEngines, theNeuralEngine, classifierEngine, ...
         exportFileName);
 
+    % Append the params struct
+    save(exportFileName, 'params', '-append');
 end
 

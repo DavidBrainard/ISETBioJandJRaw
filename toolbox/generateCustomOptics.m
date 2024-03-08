@@ -1,4 +1,4 @@
-function theOI = generateCustomOptics(psfDataFile)
+function theOI = generateCustomOptics(psfDataFile, customPupilDiameterMM)
 
     projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
 
@@ -10,6 +10,11 @@ function theOI = generateCustomOptics(psfDataFile)
           [opticsParams, thePSFensemble] = reshapePSF(opticsParams, thePSFensemble);
     else
           fprintf('No correction needed: odd spatial support');
+    end
+
+    if (~isempty(customPupilDiameterMM))
+        fprintf(2,'Applying custom pupil diameter: %f\n', customPupilDiameterMM);
+        opticsParams.pupilDiameterMM = customPupilDiameterMM;
     end
 
     % Generate optics from the synthesized PSFs
