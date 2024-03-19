@@ -122,7 +122,7 @@ function runTask()
     if (~isempty(params.customConeDensities))
         summaryFileName = strrep(summaryFileName, '.mat', sprintf('_cones_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
     end
-    if (~isempty(params.customConeDensities))
+    if (~isempty(params.customLensAgeYears))
         summaryFileName = strrep(summaryFileName, '.mat', sprintf('_lensAge_%d.mat', params.customLensAgeYears));
     end
     save(fullfile(ISETBioJandJRootPath,'results',summaryFileName),"examinedPSFDataFiles","threshold","logMAR","LCA","TCA","theConeMosaic");
@@ -316,7 +316,7 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     if (~isempty(params.customConeDensities))
         exportFileName = strrep(exportFileName, '.mat', sprintf('_cones_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
     end
-    if (~isempty(params.customConeDensities))
+    if (~isempty(params.customLensAgeYears))
         exportFileName = strrep(exportFileName, '.mat', sprintf('_lensAge_%d.mat', params.customLensAgeYears));
     end
 
