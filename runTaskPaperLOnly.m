@@ -46,7 +46,7 @@ function runTask()
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
         'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
         'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
-        'customConeDensities', [], ...                              % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
+        'customConeDensities', [0.9 0 0.1], ...                     % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
         'customPupilDiameterMM', [], ...                            % Custom pupil diameter in MM or empty to use the value from the psfDataFile
         'visualizedPSFwavelengths', [], ...                         % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization; example 400:20:700
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
