@@ -1,6 +1,6 @@
 function theOI = generateCustomOptics(psfDataFile, customPupilDiameterMM)
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
 
     fprintf('Loading custom PSF data from %s\n', fullfile(projectBaseDir,'data',psfDataFile));
     load(fullfile(projectBaseDir,'data',psfDataFile), 'opticsParams', 'thePSFensemble');

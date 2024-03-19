@@ -39,7 +39,7 @@ function visualizePSFsAtWavelengthsHelper(theCustomPSFOptics, ...
         drawnow
     end
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'PSFs.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end

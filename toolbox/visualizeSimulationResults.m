@@ -170,7 +170,7 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
     end
 
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end

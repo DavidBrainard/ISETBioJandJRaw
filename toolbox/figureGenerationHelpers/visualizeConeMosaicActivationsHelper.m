@@ -38,7 +38,7 @@ function visualizeConeMosaicActivationsHelper(theConeMosaic, ...
         ytickangle(ax, 0);
     end
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'MeanConeMosaicActivations.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 
@@ -66,7 +66,7 @@ function visualizeConeMosaicActivationsHelper(theConeMosaic, ...
         ytickangle(ax, 0);
     end
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'NoisyConeMosaicActivations.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 
@@ -116,7 +116,7 @@ function visualizeConeMosaicActivationsHelper(theConeMosaic, ...
     set(ax, 'YLim', [0 0.5], 'YTick', 0:0.1:0.5, 'FontSize', 16)
     title(ax, 'L-cone');
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'QuantalEfficiencies.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 
@@ -140,7 +140,7 @@ function visualizeConeMosaicActivationsHelper(theConeMosaic, ...
     grid(ax, 'on');
     set(ax, 'YLim', [-7 0], 'YTick', -10:1:0, 'FontSize', 16);
 
-    projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'ConeFundamentalsLog.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end

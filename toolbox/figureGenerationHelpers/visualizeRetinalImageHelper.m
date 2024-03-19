@@ -85,7 +85,7 @@ function visualizeRetinalImageHelper(theOpticalImage, visualizedWavelength, ...
     end
 
     if (~isempty(pdfFileName))
-        projectBaseDir = strrep(ISETbioJandJRootPath(), 'toolbox', '');
+        projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
         fullPdfFileName = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
         NicePlot.exportFigToPDF(fullPdfFileName, hFig, 300);
     end
