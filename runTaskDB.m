@@ -206,6 +206,6 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
         exportFileName);
 
     % Append the params struct
-    save(ullfile('results',exportFileName), 'params', '-append');
+    save(fullfile('results',exportFileName), 'params', '-append');
 end
 
