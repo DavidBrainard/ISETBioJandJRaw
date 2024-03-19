@@ -138,7 +138,7 @@ function runTask()
     legend(legendStr);
     titleStr = LiteralUnderscore(strrep(summaryFileName,'.mat',''));
     title(titleStr);
-    NicePlot.exportFigToPDF(strrep(fullfile(ISETBioJandJRootPath,'results',summaryFileName),'.mat','.pdf'),summaryFig,300);
+    NicePlot.exportFigToPDF(strrep(fullfile(ISETBioJandJRootPath,'figures',summaryFileName),'.mat','.pdf'),summaryFig,300);
 end
 
 function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
