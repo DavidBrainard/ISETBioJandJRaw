@@ -35,7 +35,7 @@ function runTask()
 
     % Parameters. These control many aspects of what gets done, particular the subject. 
     params = struct(...
-        'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
+        'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs.  Change to BVAMS_White_Guns_At_Max_HL.mat for high luminance condition.
         'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9', ...          % Subdir where the PSF data live
         'psfDataFile', '',...                                       % Datafile containing the PSF data
         'letterSizesNumExamined',  5, ...                           % How many sizes to use for sampling the psychometric curve
@@ -44,6 +44,7 @@ function runTask()
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 500 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
+        'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
         'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
         'customConeDensities', [], ...                              % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
         'customPupilDiameterMM', [], ...                            % Custom pupil diameter in MM or empty to use the value from the psfDataFile
@@ -54,24 +55,44 @@ function runTask()
     );
 
     % For each PSF file, we also tabulate the amount of LCA in D, and TCA
-    % in microns, rounded as in the paper.
+    % in microns, rounded.
+    % 
+    % This code as is runs many but not all of the LCA/TCA combinations
+    % reported in the paper.  Add in the rest of the PSF data files if you
+    % want them all.
     examinedPSFDataFiles = {...
-        'Uniform_FullVis_LCA_0_TCA_Hz0_TCA_Vt0.mat' , 0, 0 ; ...
+        'Uniform_FullVis_LCA_0_TCA_Hz0_TCA_Vt0.mat'     , 0, 0 ; ...
+        'Uniform_FullVis_LCA_1278_TCA_Hz0_TCA_Vt0.mat'  , 1.3, 0 ; ...
         'Uniform_FullVis_LCA_2203_TCA_Hz0_TCA_Vt0.mat'  , 2.2, 0 ; ...
         'Uniform_FullVis_LCA_2665_TCA_Hz0_TCA_Vt0.mat'  , 2.7, 0 ; ...
         'Uniform_FullVis_LCA_3590_TCA_Hz0_TCA_Vt0.mat'  , 3.6, 0 ; ...
 
-        'Uniform_FullVis_LCA_0_TCA_Hz200_TCA_Vt400.mat' , 0, 0.4 ; ...
+        'Uniform_FullVis_LCA_0_TCA_Hz200_TCA_Vt400.mat'    , 0, 0.4 ; ...
+        'Uniform_FullVis_LCA_1278_TCA_Hz200_TCA_Vt400.mat' , 1.3, 0.4 ; ...
         'Uniform_FullVis_LCA_2203_TCA_Hz200_TCA_Vt400.mat' , 2.2, 0.4 ; ...
         'Uniform_FullVis_LCA_2665_TCA_Hz200_TCA_Vt400.mat' , 2.7, 0.4 ; ...
         'Uniform_FullVis_LCA_3590_TCA_Hz200_TCA_Vt400.mat' , 3.6, 0.4 ; ...
 
-        'Uniform_FullVis_LCA_0_TCA_Hz1380_TCA_Vt2760.mat' , 0, 2.76 ; ...
+        'Uniform_FullVis_LCA_0_TCA_Hz790_TCA_Vt1580.mat'    , 0, 1.58 ; ...
+        'Uniform_FullVis_LCA_1278_TCA_Hz790_TCA_Vt1580.mat' , 1.3, 1.58 ; ...
+        'Uniform_FullVis_LCA_2203_TCA_Hz790_TCA_Vt1580.mat' , 2.2, 1.58 ; ...
+        'Uniform_FullVis_LCA_2665_TCA_Hz790_TCA_Vt1580.mat' , 2.7, 1.58 ; ...
+        'Uniform_FullVis_LCA_3590_TCA_Hz790_TCA_Vt1580.mat' , 3.6, 1.58 ; ...
+
+        'Uniform_FullVis_LCA_0_TCA_Hz1380_TCA_Vt2760.mat'    , 0, 2.76 ; ...
+        'Uniform_FullVis_LCA_1278_TCA_Hz1380_TCA_Vt2760.mat' , 1.3, 2.76 ; ...
         'Uniform_FullVis_LCA_2203_TCA_Hz1380_TCA_Vt2760.mat' , 2.2, 2.76 ; ...
         'Uniform_FullVis_LCA_2665_TCA_Hz1380_TCA_Vt2760.mat' , 2.7, 2.76 ; ...
         'Uniform_FullVis_LCA_3590_TCA_Hz1380_TCA_Vt2760.mat' , 3.6, 2.76 ; ...
 
-        'Uniform_FullVis_LCA_0_TCA_Hz3150_TCA_Vt6300.mat' , 0, 6.3 ; ...
+        'Uniform_FullVis_LCA_0_TCA_Hz1380_TCA_Vt2760.mat'    , 0, 3.94 ; ...
+        'Uniform_FullVis_LCA_1278_TCA_Hz1970_TCA_Vt3940.mat' , 1.3, 3.94 ; ...
+        'Uniform_FullVis_LCA_2203_TCA_Hz1970_TCA_Vt3940.mat' , 2.2, 3.94 ; ...
+        'Uniform_FullVis_LCA_2665_TCA_Hz1970_TCA_Vt3940.mat' , 2.7, 3.94 ; ...
+        'Uniform_FullVis_LCA_3590_TCA_Hz1970_TCA_Vt3940.mat' , 3.6, 3.94 ; ...
+
+        'Uniform_FullVis_LCA_0_TCA_Hz3150_TCA_Vt6300.mat'    , 0, 6.3 ; ...
+        'Uniform_FullVis_LCA_1278_TCA_Hz3150_TCA_Vt6300.mat' , 1.3, 6.3 ; ...
         'Uniform_FullVis_LCA_2203_TCA_Hz3150_TCA_Vt6300.mat' , 2.2, 6.3 ; ...
         'Uniform_FullVis_LCA_2665_TCA_Hz3150_TCA_Vt6300.mat' , 2.7, 6.3 ; ...
         'Uniform_FullVis_LCA_3590_TCA_Hz3150_TCA_Vt6300.mat' , 3.6, 6.3 ...
@@ -89,20 +110,27 @@ function runTask()
         logMAR(iPSF) = log10(threshold(iPSF)*60/5);
     end
 
-    % Save out what we did.
+    % Save summary,  This allows examination of the numbers and/or
+    % replotting.
     summaryFileName = sprintf('Summary_%s.mat', strrep(params.psfDataSubDir, '.mat', ''));
     if (~isempty(params.customMacularPigmentDensity))
-        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customMPD_%2.2f.mat', params.customMacularPigmentDensity));
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_MPD_%2.2f.mat', params.customMacularPigmentDensity));
     end
     if (~isempty(params.customPupilDiameterMM))
-        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customPupilDiamMM_%2.2f.mat', params.customPupilDiameterMM));
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_pupilDiamMM_%2.2f.mat', params.customPupilDiameterMM));
     end
     if (~isempty(params.customConeDensities))
-        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_cones_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
+    end
+    if (~isempty(params.customConeDensities))
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_lensAge_%d.mat', params.customLensAgeYears));
     end
     save(fullfile(ISETBioJandJRootPath,'results',summaryFileName),"examinedPSFDataFiles","threshold","logMAR","LCA","TCA","theConeMosaic");
     
-    % Make a figure of what happened.
+    % Make and save a figure of what happened. This is not publication
+    % quality, but does match up with the key figure in the paper in tersm
+    % of its format. Values may differ from run to run because of
+    % differeing random number sequences.
     LCAValues = unique(LCA);
     TCAValues = unique(TCA);
     legendStr = {};
@@ -113,7 +141,7 @@ function runTask()
         theColor(tt,:) = [1-tt/length(TCAValues) tt/length(TCAValues) 0];
         index = find(TCA == TCAValues(tt));
         plot(LCA(index),logMAR(index),'o-','Color',theColor(tt,:),'MarkerFaceColor',theColor(tt,:),'MarkerSize',10,'LineWidth',2);
-        legendStr = {legendStr{:} ['TCA ' num2str(TCAValues(tt))]};
+        legendStr = [legendStr(:)' {['TCA ' num2str(TCAValues(tt))]}];
     end
     ylim([-0.35 0.15]);
     xlabel('LCA (D)');
@@ -130,7 +158,6 @@ function runTask()
         tempLogMAR = logMAR(index);
         index1 = find(tempLCA == 0);
         plot(LCA(index),-(logMAR(index)-tempLogMAR(index1)),'o-','Color',theColor(tt,:),'MarkerFaceColor',theColor(tt,:),'MarkerSize',10,'LineWidth',2);
-        legendStr = {legendStr{:} ['TCA ' num2str(TCAValues(tt))]};
     end
     ylim([-0.35 0.15]);
     xlabel('LCA (D)');
@@ -153,7 +180,7 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     psfDataFile = fullfile(params.psfDataSubDir, params.psfDataFile);
     
     % Generate optics from custom PSFs
-    theCustomPSFOptics = generateCustomOptics(psfDataFile, params.customPupilDiameterMM);
+    theCustomPSFOptics = generateCustomOptics(psfDataFile, params.customPupilDiameterMM, params.customLensAgeYears);
 
     % Visualization of the PSF stack
     if (~isempty(params.visualizedPSFwavelengths))
@@ -281,13 +308,16 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     % Export the results
     exportFileName = sprintf('Results_%s_Reps_%d.mat', strrep(params.psfDataFile, '.mat', ''), nTest);
     if (~isempty(params.customMacularPigmentDensity))
-        exportFileName = strrep(exportFileName, '.mat', sprintf('_customMPD_%2.2f.mat', params.customMacularPigmentDensity));
+        exportFileName = strrep(exportFileName, '.mat', sprintf('_MPD_%2.2f.mat', params.customMacularPigmentDensity));
     end
     if (~isempty(params.customPupilDiameterMM))
-        exportFileName = strrep(exportFileName, '.mat', sprintf('_customPupilDiamMM_%2.2f.mat', params.customPupilDiameterMM));
+        exportFileName = strrep(exportFileName, '.mat', sprintf('_PupilDiamMM_%2.2f.mat', params.customPupilDiameterMM));
     end
     if (~isempty(params.customConeDensities))
-        exportFileName = strrep(exportFileName, '.mat', sprintf('_customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
+        exportFileName = strrep(exportFileName, '.mat', sprintf('_cones_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
+    end
+    if (~isempty(params.customConeDensities))
+        exportFileName = strrep(exportFileName, '.mat', sprintf('_lensAge_%d.mat', params.customLensAgeYears));
     end
 
     fprintf('Saving data to %s\n', fullfile(ISETBioJandJRootPath,'results',exportFileName));
