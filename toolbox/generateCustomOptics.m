@@ -1,4 +1,4 @@
-function theOI = generateCustomOptics(psfDataFile, customPupilDiameterMM)
+function theOI = generateCustomOptics(psfDataFile, customPupilDiameterMM, customLensAgeYears)
 
     projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
 
@@ -12,14 +12,57 @@ function theOI = generateCustomOptics(psfDataFile, customPupilDiameterMM)
           fprintf('No correction needed: odd spatial support');
     end
 
+
     if (~isempty(customPupilDiameterMM))
         fprintf(2,'Applying custom pupil diameter: %f\n', customPupilDiameterMM);
         opticsParams.pupilDiameterMM = customPupilDiameterMM;
     end
 
+
     % Generate optics from the synthesized PSFs
     theOI = oiFromPSF(thePSFensemble, opticsParams.wavelengthSupport, ...
-        opticsParams.spatialSupportArcMin, opticsParams.pupilDiameterMM, opticsParams.umPerDegree);
+        opticsParams.spatialSupportArcMin, opticsParams.pupilDiameterMM, ...
+        opticsParams.umPerDegree);
+
+    % If we have a custom lens age, update theOI
+    if (~isempty(customLensAgeYears))
+        % Save the custom lens age in the opticsParams
+        opticsParams.customLensAgeYears = customLensAgeYears;
+
+        fprintf(2,'Applying custom lens age: %d\n', customLensAgeYears);
+
+        % Get the optics
+        theOptics = oiGet(theOI, 'optics');
+
+        % Get the wavelength support 
+        wls = opticsGet(theOptics, 'wave');
+
+        % Compute lens density for the given age
+        [~,lensUnitDensity] = LensTransmittance(wls(:),'Human','CIE', customLensAgeYears, opticsParams.pupilDiameterMM);
+
+        % Get the default lens
+        theLens = opticsGet(theOptics, 'lens');
+
+        % Get the default lens density
+        defaultLensDensity = theLens.get('unitdensity');
+
+        % Update the lens density to the computed value
+        theLens.set('unitdensity', lensUnitDensity);
+
+        % Report density change
+        customLensDensity = theLens.get('unitdensity');
+        idx = find(defaultLensDensity>0);
+        fprintf(2,'---> Lens density for %d year-old subject is %2.2f times that of the default subject. \n', ...
+            customLensAgeYears, mean(customLensDensity(idx)./defaultLensDensity(idx)));
+
+        % Update the optics with the updated lens
+        theOptics = opticsSet(theOptics, 'lens', theLens);
+
+        % Update the oi with the updated optics
+        theOI = oiSet(theOI, 'optics', theOptics);
+    end
+    
+    
 end
 
 

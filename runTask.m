@@ -9,7 +9,7 @@ function runTask()
     % Parameters    
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
-        'psfDataSubDir', 'FullVis_PSFs_10nm_Subject9', ...          % Subdir where the PSF data live
+        'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9', ...          % Subdir where the PSF data live
         'psfDataFile', '',...                                       % Datafile containing the PSF data
         'letterSizesNumExamined',  5, ...                           % How many sizes to use for sampling the psychometric curve
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
@@ -17,16 +17,17 @@ function runTask()
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
-        'customMacularPigmentDensity', 0.4, ...                   % custom MPD, or empty to use the default
+        'customLensAgeYears', 75, ...                               % Lens age in years (valid range: 20-80), or empty to use the default age
+        'customMacularPigmentDensity', 0.4, ...                     % custom MPD, or empty to use the default
         'customConeDensities', [0.6 0.3 0.1], ...                   % custom L-M-S ratio or empty to use default
-        'customPupilDiameterMM', 4, ...                            % custom pupil diameter in MM or empty to use the value from the psfDataFile
+        'customPupilDiameterMM', 4, ...                             % custom pupil diameter in MM or empty to use the value from the psfDataFile
         'visualizedPSFwavelengths', [], ... %380:10:770, ...        % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization.
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
         'visualizeScene', ~true ...                                 % Flag, indicating whether to visualize one of the scenes
     );
 
     examinedPSFDataFiles = {...
-        'Uniform_FullVis_LCA_zero_TCA_zero.mat' ...
+        'Uniform_FullVis_LCA_0_TCA_Hz0_TCA_Vt0.mat' ...
         'Uniform_FullVis_LCA_low_TCA_zero.mat' ...
         'Uniform_FullVis_LCA_high_TCA_zero.mat' ...
         'Uniform_FullVis_LCA_zero_TCA_low.mat' ...
@@ -60,7 +61,7 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
     psfDataFile = fullfile(params.psfDataSubDir, params.psfDataFile);
     
     % Generate optics from custom PSFs
-    theCustomPSFOptics = generateCustomOptics(psfDataFile, params.customPupilDiameterMM);
+    theCustomPSFOptics = generateCustomOptics(psfDataFile, params.customPupilDiameterMM, params.customLensAgeYears);
 
     % Visualization of the PSF stack
     if (~isempty(params.visualizedPSFwavelengths))
