@@ -229,6 +229,6 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
         exportFileName);
 
     % Append the params struct
-    save(fullfile(IBIOJandJRootPath,'results',exportFileName), 'params', '-append');
+    save(fullfile(ISETBioJandJRootPath,'results',exportFileName), 'params', '-append');
 end
 
