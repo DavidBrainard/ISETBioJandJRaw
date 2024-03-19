@@ -198,11 +198,11 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
             'beVerbose', true);
 
     % Plot the derived psychometric function
-    pdfFileName = fullfile(ISETJandJRootPath,'figures',sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest));
+    pdfFileName = fullfile(ISETBioJandJRootPath,'figures',sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest));
     plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
 
-    pdfFileName = fullfile(ISETJandJRootPath,'figures',sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest));
+    pdfFileName = fullfile(ISETBioJandJRootPath,'figures',sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest));
     visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, tumblingEsceneEngines, theNeuralEngine, pdfFileName);
 
