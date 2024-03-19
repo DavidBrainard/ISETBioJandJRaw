@@ -24,7 +24,7 @@ function runTask()
         'letterSizesNumExamined',  5, ...                           % How many sizes to use for sampling the psychometric curve
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
         'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
-        'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 300 msec
+        'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 500 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
         'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
@@ -32,7 +32,8 @@ function runTask()
         'customPupilDiameterMM', [], ...                            % Custom pupil diameter in MM or empty to use the value from the psfDataFile
         'visualizedPSFwavelengths', [], ...                         % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization; example 400:20:700
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
-        'visualizeScene', ~true ...                                 % Flag, indicating whether to visualize one of the scenes
+        'visualizeScene', ~true, ...                                % Flag, indicating whether to visualize one of the scenes
+        'visualEsOnMosaic', ~true ...                               % Flag, indicating whether to visualize E's against mosaic as function of their size
     );
 
     examinedPSFDataFiles = {...
@@ -58,13 +59,14 @@ function runTask()
         };
 
 
-    for iPSF = 1:size(examinedPSFDataFiles,1)
+    for iPSF = 1:1%size(examinedPSFDataFiles,1)
         theConeMosaic = [];
         tempParams = params;
         tempParams.psfDataFile = examinedPSFDataFiles{iPSF,1};
         LCA(iPSF) = examinedPSFDataFiles{iPSF,2};
         TCA(iPSF) = examinedPSFDataFiles{iPSF,3};
         [theConeMosaic{iPSF},threshold(iPSF)] = runSimulation(tempParams, theConeMosaic);
+        logMAR(iPSF) = log10(threshold(iPSF)*60/5);
     end
     
 end
@@ -172,8 +174,7 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
         visualizationSceneParams = customSceneParams;
         visualizationSceneParams.visualizeScene = true;
         theSceneEngine.sceneComputeFunction(theSceneEngine,0.3, visualizationSceneParams);
-    end
-    
+    end 
     clear 'theSceneEngine';
     
     % Generate scene engines for the tumbling E's (4 orientations)
@@ -202,9 +203,11 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     pdfFileName = sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
     plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
-    pdfFileName = sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
-    visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
-        thresholdParameters, tumblingEsceneEngines, theNeuralEngine, pdfFileName);
+    if (params.visualEsOnMosaic)
+        pdfFileName = sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
+        visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
+            thresholdParameters, tumblingEsceneEngines, theNeuralEngine, pdfFileName);
+    end
 
     % Export the results
     exportFileName = sprintf('Results_%s_Reps_%d.mat', strrep(params.psfDataFile, '.mat', ''), nTest);
@@ -219,7 +222,7 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
         exportFileName = strrep(exportFileName, '.mat', sprintf('_customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
     end
 
-    fprintf('Saving data to %s\n', fullfile(IBIOJandJRootPath,'results',exportFileName));
+    fprintf('Saving data to %s\n', fullfile(ISETBioJandJRootPath,'results',exportFileName));
     exportSimulation(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, classifierPara, questEnginePara, ...
         tumblingEsceneEngines, theNeuralEngine, classifierEngine, ...
