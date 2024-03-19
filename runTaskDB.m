@@ -150,6 +150,7 @@ function runTask()
     titleStr = LiteralUnderscore(strrep(summaryFileName,'.mat',''));
     title(titleStr);
 
+    % This panel is the VA difference plot.
     subplot(1,2,2); hold on;
     legendStr = {};
     for tt = 1:length(TCAValues)
