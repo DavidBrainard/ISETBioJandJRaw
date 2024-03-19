@@ -89,13 +89,24 @@ function runTask()
         logMAR(iPSF) = log10(threshold(iPSF)*60/5);
     end
 
-
-
+    % Save out what we did.
+    summaryFileName = sprintf('Summary_%s.mat', strrep(params.psfDataFile, '.mat', ''));
+    if (~isempty(params.customMacularPigmentDensity))
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customMPD_%2.2f.mat', params.customMacularPigmentDensity));
+    end
+    if (~isempty(params.customPupilDiameterMM))
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customPupilDiamMM_%2.2f.mat', params.customPupilDiameterMM));
+    end
+    if (~isempty(params.customConeDensities))
+        summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
+    end
+    save(fullfile(ISETBioJandJRootPath,'results',summaryFileName),"examinedPSFDataFiles","theshold","logMAR","LCA","TCA","theConeMosaic");
+    
     % Make a figure of what happened.
     LCAValues = unique(LCA);
     TCAValues = unique(TCA);
     legendStr = {};
-    figure; clf;
+    summaryFig = figure; clf;
     set(gcf,'Position',[100 100 1500 750]);
     subplot(1,2,1); hold on;
     for tt = 1:length(TCAValues)
@@ -110,7 +121,23 @@ function runTask()
     legend(legendStr);
     titleStr = sprintf('%s',LiteralUnderscore(params.psfDataSubDir));
     title(titleStr);
-    
+
+    subplot(1,2,1); hold on;
+    for tt = 1:length(TCAValues)
+        theColor = rand(3,1);
+        index = find(TCA == TCAValues(tt));
+        tempLCA = LCA(index);
+        index1 = find(temp == 0);
+        plot(LCA(index),logMAR(index)-tempLCA(index1),'o-','Color',theColor,'MarkerFaceColor',theColor,'MarkerSize',10,'LineWidth',2);
+        legendStr = {legendStr{:} ['TCA ' num2str(TCAValues(tt))]};
+    end
+    ylim([-0.35 0.15]);
+    xlabel('LCA (D)');
+    ylabel('VA (logMAR)');
+    legend(legendStr);
+    titleStr = strrep(summaryFileName,'.mat','');
+    title(titleStr);
+    NicePlot.exportFigToPDF(strrep(fullfile(ISETBioJandJRootPath,'results',summaryFileName),'.mat','.pdf'),summaryFig,300);
 end
 
 function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
@@ -143,7 +170,6 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
             'customMPD', params.customMacularPigmentDensity, ...
             'customConeDensities', params.customConeDensities);
     end
-
 
     %% Create neural response engine
     %
@@ -253,7 +279,6 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
 
     % Export the results
     exportFileName = sprintf('Results_%s_Reps_%d.mat', strrep(params.psfDataFile, '.mat', ''), nTest);
-
     if (~isempty(params.customMacularPigmentDensity))
         exportFileName = strrep(exportFileName, '.mat', sprintf('_customMPD_%2.2f.mat', params.customMacularPigmentDensity));
     end
