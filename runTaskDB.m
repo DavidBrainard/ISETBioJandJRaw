@@ -6,6 +6,16 @@ function runTask()
     % Close all figures
     close all;
 
+    % Make sure figures and results directories exist so that output writes
+    % don't fail
+    rootPath = ISETBioJandJRootPath;
+    if (~exist(fullfile(rootPath,'figures'),'dir'))
+        mkdir(fullfile(rootPath,'figures');
+    end
+    if (~exist(fullfile(rootPath,'results'),'dir'))
+        mkdir(fullfile(rootPath,'results');
+    end
+
     % Parameters    
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
@@ -49,16 +59,16 @@ function runTask()
 
 
     theConeMosaic = [];
-    for iPSF = 1:1% numel(examinedPSFDataFiles{1})
+    for iPSF = 1:numel(examinedPSFDataFiles{1})
         tic
         params.psfDataFile = examinedPSFDataFiles{iPSF};
-        theConeMosaic = runSimulation(params, theConeMosaic);
+        [theConeMosaic,threshold(iPSF)] = runSimulation(params, theConeMosaic);
         toc
     end
     
 end
 
-function theConeMosaic = runSimulation(params, theConeMosaic)
+function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
 
     % Unpack simulation params
     letterSizesNumExamined = params.letterSizesNumExamined;
@@ -112,7 +122,6 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
     classifierPara = struct('trainFlag', 'none', ...
                             'testFlag', 'random', ...
                             'nTrain', 1, 'nTest', nTest);
-
 
     % Tumbling E setup
     orientations = [0 90 180 270];
@@ -188,11 +197,11 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
             'beVerbose', true);
 
     % Plot the derived psychometric function
-    pdfFileName = sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
+    pdfFileName = fullfile(ISETJandJRootPath,'figures',sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest));
     plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
 
-    pdfFileName = sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
+    pdfFileName = fullfile(ISETJandJRootPath,'figures',sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest));
     visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, tumblingEsceneEngines, theNeuralEngine, pdfFileName);
 
@@ -209,13 +218,13 @@ function theConeMosaic = runSimulation(params, theConeMosaic)
         exportFileName = strrep(exportFileName, '.mat', sprintf('_customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
     end
 
-    fprintf('Saving data to %s\n', fullfile('results',exportFileName));
+    fprintf('Saving data to %s\n', fullfile(IBIOJandJRootPath,'results',exportFileName));
     exportSimulation(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, classifierPara, questEnginePara, ...
         tumblingEsceneEngines, theNeuralEngine, classifierEngine, ...
         exportFileName);
 
     % Append the params struct
-    save(fullfile('results',exportFileName), 'params', '-append');
+    save(fullfile(IBIOJandJRootPath,'results',exportFileName), 'params', '-append');
 end
 
