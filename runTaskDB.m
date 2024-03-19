@@ -38,13 +38,13 @@ function runTask()
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs.  Change to BVAMS_White_Guns_At_Max_HL.mat for high luminance condition.
         'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9', ...          % Subdir where the PSF data live
         'psfDataFile', '',...                                       % Datafile containing the PSF data
-        'letterSizesNumExamined',  5, ...                           % How many sizes to use for sampling the psychometric curve
+        'letterSizesNumExamined',  9, ...                           % How many sizes to use for sampling the psychometric curve (9 used in the paper)
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
         'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 500 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
-        'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
+        'customLensAgeYears', 60, ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
         'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
         'customConeDensities', [], ...                              % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
         'customPupilDiameterMM', [], ...                            % Custom pupil diameter in MM or empty to use the value from the psfDataFile
@@ -152,7 +152,6 @@ function runTask()
 
     % This panel is the VA difference plot.
     subplot(1,2,2); hold on;
-    legendStr = {};
     for tt = 1:length(TCAValues)
         index = find(TCA == TCAValues(tt));
         tempLCA = LCA(index);
