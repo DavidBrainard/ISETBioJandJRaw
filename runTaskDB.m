@@ -58,14 +58,13 @@ function runTask()
         };
 
 
-    theConeMosaic = [];
-    for iPSF = 1:size(examinedPSFDataFiles,1)
-        tic
-        params.psfDataFile = examinedPSFDataFiles{iPSF,1};
+    parfor iPSF = 1:size(examinedPSFDataFiles,1)
+        theConeMosaic = [];
+        tempParams = params;
+        tempParams.psfDataFile = examinedPSFDataFiles{iPSF,1};
         LCA(iPSF) = examinedPSFDataFiles{iPSF,2};
         TCA(iPSF) = examinedPSFDataFiles{iPSF,3};
-        [theConeMosaic,threshold(iPSF)] = runSimulation(params, theConeMosaic);
-        toc
+        [theConeMosaic{iPSF},threshold(iPSF)] = runSimulation(tempParams, theConeMosaic);
     end
     
 end
