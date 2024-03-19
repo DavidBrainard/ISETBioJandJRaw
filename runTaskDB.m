@@ -90,7 +90,7 @@ function runTask()
     end
 
     % Save out what we did.
-    summaryFileName = sprintf('Summary_%s.mat', strrep(params.psfDataFile, '.mat', ''));
+    summaryFileName = sprintf('Summary_%s.mat', strrep(params.psfDataSubDir, '.mat', ''));
     if (~isempty(params.customMacularPigmentDensity))
         summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customMPD_%2.2f.mat', params.customMacularPigmentDensity));
     end
@@ -100,7 +100,7 @@ function runTask()
     if (~isempty(params.customConeDensities))
         summaryFileName = strrep(summaryFileName, '.mat', sprintf('_customConeDensities_%2.2f_%2.2f_%2.2f.mat', params.customConeDensities(1), params.customConeDensities(2), params.customConeDensities(3)));
     end
-    save(fullfile(ISETBioJandJRootPath,'results',summaryFileName),"examinedPSFDataFiles","theshold","logMAR","LCA","TCA","theConeMosaic");
+    save(fullfile(ISETBioJandJRootPath,'results',summaryFileName),"examinedPSFDataFiles","threshold","logMAR","LCA","TCA","theConeMosaic");
     
     % Make a figure of what happened.
     LCAValues = unique(LCA);
@@ -110,34 +110,35 @@ function runTask()
     set(gcf,'Position',[100 100 1500 750]);
     subplot(1,2,1); hold on;
     for tt = 1:length(TCAValues)
-        theColor = rand(3,1);
+        theColor(tt,:) = [1-tt/length(TCAValues) tt/length(TCAValues) 0];
         index = find(TCA == TCAValues(tt));
-        plot(LCA(index),logMAR(index),'o-','Color',theColor,'MarkerFaceColor',theColor,'MarkerSize',10,'LineWidth',2);
+        plot(LCA(index),logMAR(index),'o-','Color',theColor(tt,:),'MarkerFaceColor',theColor(tt,:),'MarkerSize',10,'LineWidth',2);
         legendStr = {legendStr{:} ['TCA ' num2str(TCAValues(tt))]};
     end
     ylim([-0.35 0.15]);
     xlabel('LCA (D)');
     ylabel('VA (logMAR)');
     legend(legendStr);
-    titleStr = sprintf('%s',LiteralUnderscore(params.psfDataSubDir));
+    titleStr = LiteralUnderscore(strrep(summaryFileName,'.mat',''));
     title(titleStr);
 
-    subplot(1,2,1); hold on;
+    subplot(1,2,2); hold on;
+    legendStr = {};
     for tt = 1:length(TCAValues)
-        theColor = rand(3,1);
         index = find(TCA == TCAValues(tt));
         tempLCA = LCA(index);
-        index1 = find(temp == 0);
-        plot(LCA(index),logMAR(index)-tempLCA(index1),'o-','Color',theColor,'MarkerFaceColor',theColor,'MarkerSize',10,'LineWidth',2);
+        tempLogMAR = logMAR(index);
+        index1 = find(tempLCA == 0);
+        plot(LCA(index),-(logMAR(index)-tempLogMAR(index1)),'o-','Color',theColor(tt,:),'MarkerFaceColor',theColor(tt,:),'MarkerSize',10,'LineWidth',2);
         legendStr = {legendStr{:} ['TCA ' num2str(TCAValues(tt))]};
     end
     ylim([-0.35 0.15]);
     xlabel('LCA (D)');
     ylabel('VA (logMAR)');
     legend(legendStr);
-    titleStr = strrep(summaryFileName,'.mat','');
+    titleStr = LiteralUnderscore(strrep(summaryFileName,'.mat',''));
     title(titleStr);
-    NicePlot.exportFigToPDF(strrep(fullfile(ISETBioJandJRootPath,'results',summaryFileName),'.mat','.pdf'),summaryFig,300);
+    NicePlot.exportFigToPDF(strrep(fullfile(ISETBioJandJRootPath,'figures',summaryFileName),'.mat','.pdf'),summaryFig,300);
 end
 
 function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
