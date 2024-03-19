@@ -83,23 +83,27 @@ function runTask()
         logMAR(iPSF) = log10(threshold(iPSF)*60/5);
     end
 
+
+
     % Make a figure of what happened.
     LCAValues = unique(LCA);
     TCAValues = unique(TCA);
     legendStr = {};
-    figure; clf; hold on;
+    figure; clf;
+    set(gcf,'Position',[100 100 1500 750]);
+    subplot(1,2,1); hold on;
     for tt = 1:length(TCAValues)
         theColor = rand(3,1);
         index = find(TCA == TCAValues(tt));
-        plot(LCA(index),logMAR(index),'-','Color',theColor,'LineWidth',2);
-        plot(LCA(index),logMAR(index),'o','Color',theColor,'MarkerFaceColor',theColor,'MarkerSize',10);
-        plot(LCA(index),logMAR(index),'-','Color',theColor,'LineWidth',2);
-        legendStr = {legendStr{:} num2str(TCAValues(tt)) ''};
+        plot(LCA(index),logMAR(index),'o-','Color',theColor,'MarkerFaceColor',theColor,'MarkerSize',10,'LineWidth',2);
+        legendStr = {legendStr{:} ['TCA ' num2str(TCAValues(tt))]};
     end
+    ylim([-0.35 0.15]);
     xlabel('LCA (D)');
     ylabel('VA (logMAR)');
     legend(legendStr);
-
+    titleStr = sprintf('%s',LiteralUnderscore(params.psfDataSubDir));
+    title(titleStr);
     
 end
 
