@@ -44,7 +44,7 @@ function runTask()
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 500 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
-        'customLensAgeYears', 60, ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
+        'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
         'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
         'customConeDensities', [], ...                              % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
         'customPupilDiameterMM', [], ...                            % Custom pupil diameter in MM or empty to use the value from the psfDataFile
