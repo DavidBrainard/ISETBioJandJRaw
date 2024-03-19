@@ -6,7 +6,13 @@
 % To run this script, you need Matlab, some of its toolboxes, and the
 % following on your path.
 %
-% ISETBioCSFGenerator, branch ChromAbPaper, 
+%     ISETBioCSFGenerator, branch ChromAbPaper, https://github.com/isetbio/ISETBioCSFGenerator.git
+%     isetbio, branch ChromAbPaper, https://github.com/isetbio/isetbio.git
+%     mQUESTPlus, https://github.com/brainardlab/mQUESTPlus.git
+%     Palamedes Toolbox, https://palamedestoolbox.org, version 1.8.2.
+%        [This may work with more recent versions, but we run against 1.8.2.
+%        You may need to write to the Palamedes team to get that version.]
+
 function runTask()
     % Clear out
     clear; close all;
