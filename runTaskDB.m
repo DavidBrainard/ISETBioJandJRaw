@@ -1,4 +1,15 @@
+% This script calculates visual acuity for a set of specified PSFs. 
+%
+% As configured, it reproduces for Subject 9 the results in Figure X of the
+% paper.
+%
+% To run this script, you need Matlab, some of its toolboxes, and the
+% following on your path.
+%
+% ISETBioCSFGenerator, branch ChromAbPaper, 
 function runTask()
+    % Clear out
+    clear; close all;
 
     % No waitbar
     ieSessionGet('waitbar');
@@ -16,7 +27,7 @@ function runTask()
         mkdir(fullfile(rootPath,'results'));
     end
 
-    % Parameters    
+    % Parameters. These control many aspects of what gets done, particular the subject. 
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs
         'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9', ...          % Subdir where the PSF data live
@@ -36,6 +47,8 @@ function runTask()
         'visualEsOnMosaic', ~true ...                               % Flag, indicating whether to visualize E's against mosaic as function of their size
     );
 
+    % For each PSF file, we also tabulate the amount of LCA in D, and TCA
+    % in microns, rounded as in the paper.
     examinedPSFDataFiles = {...
         'Uniform_FullVis_LCA_0_TCA_Hz0_TCA_Vt0.mat' , 0, 0 ; ...
         'Uniform_FullVis_LCA_2203_TCA_Hz0_TCA_Vt0.mat'  , 2.2, 0 ; ...
@@ -58,7 +71,8 @@ function runTask()
         'Uniform_FullVis_LCA_3590_TCA_Hz3150_TCA_Vt6300.mat' , 3.6, 6.3 ...
         };
 
-
+    % Loop over all the specified PSFs.  This loop saves the data out for
+    % each PSF, as well as accumulates the threshold for each.
     for iPSF = 1:size(examinedPSFDataFiles,1)
         theConeMosaic = [];
         tempParams = params;
@@ -68,6 +82,24 @@ function runTask()
         [theConeMosaic{iPSF},threshold(iPSF)] = runSimulation(tempParams, theConeMosaic);
         logMAR(iPSF) = log10(threshold(iPSF)*60/5);
     end
+
+    % Make a figure of what happened.
+    LCAValues = unique(LCA);
+    TCAValues = unique(TCA);
+    legendStr = {};
+    figure; clf; hold on;
+    for tt = 1:length(TCAValues)
+        theColor = rand(3,1);
+        index = find(TCA == TCAValues(tt));
+        plot(LCA(index),logMAR(index),'-','Color',theColor,'LineWidth',2);
+        plot(LCA(index),logMAR(index),'o','Color',theColor,'MarkerFaceColor',theColor,'MarkerSize',10);
+        plot(LCA(index),logMAR(index),'-','Color',theColor,'LineWidth',2);
+        legendStr = {legendStr{:} num2str(TCAValues(tt)) ''};
+    end
+    xlabel('LCA (D)');
+    ylabel('VA (logMAR)');
+    legend(legendStr);
+
     
 end
 
