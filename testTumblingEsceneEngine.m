@@ -135,7 +135,7 @@ function testTumblingEsceneEngine()
             'XTick', [-0.1 0 0.1], 'YTick', [-0.1 0 0.1] ...
             );
 
-    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = ISETBioJandJRootPath());
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'stimuli.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 

@@ -2,7 +2,7 @@ function presentationDisplay = generatePresentationDisplay(...
     letterSizeDegs, letterSizePixels, spdDataFile, ambientSPDDataFile, plotCharacteristics)
 
     % Load the ambient SPD
-    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = ISETBioJandJRootPath();
 
     fprintf('Loading ambient SPD from %s\n', fullfile(projectBaseDir,'data',ambientSPDDataFile));
     load(fullfile(projectBaseDir,'data',ambientSPDDataFile), 'spd');

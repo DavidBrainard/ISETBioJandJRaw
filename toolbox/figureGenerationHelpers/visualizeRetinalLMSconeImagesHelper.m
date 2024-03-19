@@ -60,7 +60,7 @@ function visualizeRetinalLMSconeImagesHelper(opticalImage, ...
         drawnow
     end
 
-    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = ISETBioJandJRootPath();
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'RetinalLMSconeImages.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 

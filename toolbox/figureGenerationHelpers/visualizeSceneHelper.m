@@ -61,7 +61,7 @@ function hFig = visualizeSceneHelper(theScene, ...
     end
 
     if (~isempty(pdfFileName))
-        projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
+        projectBaseDir = ISETBioJandJRootPath();
         fullPdfFileName = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
         NicePlot.exportFigToPDF(fullPdfFileName, hFig, 300);
     end

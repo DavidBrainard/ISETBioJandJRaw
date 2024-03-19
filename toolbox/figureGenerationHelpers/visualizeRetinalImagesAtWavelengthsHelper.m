@@ -56,7 +56,7 @@ function visualizeRetinalImagesAtWavelengthsHelper(opticalImage, ...
         drawnow
     end
 
-    projectBaseDir = strrep(ISETBioJandJRootPath(), 'toolbox', '');
+    projectBaseDir = ISETBioJandJRootPath();
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'RetinalImages.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 
