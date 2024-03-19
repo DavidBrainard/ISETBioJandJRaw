@@ -59,7 +59,7 @@ function runTask()
         };
 
 
-    for iPSF = 1:1%size(examinedPSFDataFiles,1)
+    for iPSF = 1:size(examinedPSFDataFiles,1)
         theConeMosaic = [];
         tempParams = params;
         tempParams.psfDataFile = examinedPSFDataFiles{iPSF,1};
