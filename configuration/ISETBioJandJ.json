@@ -6,7 +6,7 @@
 		"localHookTemplate": "configuration/ISETBioJandJLocalHookTemplate.m",
 		"name": "ISETBioJandJ",
 		"pathPlacement": "append",
-		"subfolder": ["toolbox", "tutorials", "compute"],
+		"subfolder": "",
 		"toolboxRoot": "",
 		"type": "git",
 		"update": "",

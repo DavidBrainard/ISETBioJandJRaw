@@ -1,5 +1,15 @@
 function testTumblingEsceneEngine()
 
+    % Initialize
+    clear; close all;
+    
+    % Make sure figures and results directories exist so that output writes
+    % don't fail
+    rootPath = ISETBioJandJRootPath;
+    if (~exist(fullfile(rootPath,'figures'),'dir'))
+        mkdir(fullfile(rootPath,'figures'));
+    end
+
     % Obtain the default params for the tumblingEscene engine
     theSceneEngine = createTumblingEsceneEngine(0);
     defaultParams = theSceneEngine.sceneComputeFunction();
@@ -135,7 +145,7 @@ function testTumblingEsceneEngine()
             'XTick', [-0.1 0 0.1], 'YTick', [-0.1 0 0.1] ...
             );
 
-    projectBaseDir = ISETBioJandJRootPath());
+    projectBaseDir = ISETBioJandJRootPath;
     pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'stimuli.pdf'];
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 
