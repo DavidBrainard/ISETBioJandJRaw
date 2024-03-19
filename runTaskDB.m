@@ -201,8 +201,8 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     % Plot the derived psychometric function and other things.  The lower
     % level routines put this in ISETBioJandJRootPath/figures.
     pdfFileName = sprintf('Performance_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
-    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...
-        thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);
+    plotDerivedPsychometricFunction(questObj, threshold, fittedPsychometricParams, ...ISETBio
+        thresholdParameters, pdfFileName, 'xRange', [0.02 0.2]);  
     if (params.visualEsOnMosaic)
         pdfFileName = sprintf('Simulation_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
         visualizeSimulationResults(questObj, threshold, fittedPsychometricParams, ...
@@ -226,7 +226,7 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     exportSimulation(questObj, threshold, fittedPsychometricParams, ...
         thresholdParameters, classifierPara, questEnginePara, ...
         tumblingEsceneEngines, theNeuralEngine, classifierEngine, ...
-        exportFileName);
+        fullfile(ISETBioJandJRootPath,'results',exportFileName));
 
     % Append the params struct
     save(fullfile(ISETBioJandJRootPath,'results',exportFileName), 'params', '-append');
