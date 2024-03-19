@@ -79,7 +79,7 @@ function runTask()
 
     % Loop over all the specified PSFs.  This loop saves the data out for
     % each PSF, as well as accumulates the threshold for each.
-    for iPSF = 1:size(examinedPSFDataFiles,1)[sfDataFo;e]
+    for iPSF = 1:size(examinedPSFDataFiles,1)
         theConeMosaic = [];
         tempParams = params;
         tempParams.psfDataFile = examinedPSFDataFiles{iPSF,1};
