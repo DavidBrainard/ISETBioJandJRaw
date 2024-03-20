@@ -36,7 +36,7 @@ function runTask()
     % Parameters. These control many aspects of what gets done, particular the subject. 
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs.  Change to BVAMS_White_Guns_At_Max_HL.mat for high luminance condition.
-        'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9_4p0mmEPD', ... % Subdir where the PSF data live
+        'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9_1p5mmEPD', ... % Subdir where the PSF data live
         'psfDataFile', '',...                                       % Datafile containing the PSF data
         'letterSizesNumExamined',  9, ...                           % How many sizes to use for sampling the psychometric curve (9 used in the paper)
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
@@ -45,9 +45,9 @@ function runTask()
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
         'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
-        'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
+        'customMacularPigmentDensity', [], ...                      % Custom MPD, or empty to use the default; example, 0.4
         'customConeDensities', [], ...                              % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
-        'customPupilDiameterMM', 3, ...                             % Custom pupil diameter in MM or empty to use the value from the psfDataFile
+        'customPupilDiameterMM', 4, ...                             % Custom pupil diameter in MM or empty to use the value from the psfDataFile
         'visualizedPSFwavelengths', [], ...                         % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization; example 400:20:700
         'visualizeDisplayCharacteristics', ~true, ...               % Flag, indicating whether to visualize the display characteristics
         'visualizeScene', ~true, ...                                % Flag, indicating whether to visualize one of the scenes
