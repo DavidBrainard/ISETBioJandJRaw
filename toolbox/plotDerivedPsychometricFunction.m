@@ -58,7 +58,5 @@ function plotDerivedPsychometricFunction(questObj, threshold, ...
     grid on; box off
     title(sprintf('threshold: %2.3f degs', threshold));
 
-    projectBaseDir = ISETBioJandJRootPath();
-    pdfFile = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
-    NicePlot.exportFigToPDF(pdfFile,hFig, 300);
+    NicePlot.exportFigToPDF(pdfFileName,hFig, 300);
 end

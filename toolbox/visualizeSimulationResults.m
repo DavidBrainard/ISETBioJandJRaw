@@ -5,11 +5,8 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
     fittedPsychometricFunction = questObj.qpPF(questObj.estDomain', fittedPsychometricParams);
     examinedParameterAxis = 10.^(questObj.estDomain)*thresholdParameters.maxParamValue;
 
-
-
     hFig = figure(3); clf;
     
-
     % Flag indicating whether to visualize the noise-free cone mosaic
     % excitations or noisy instances (generates a video)
     visualizeNoiseFreeMosaicActivation = true;
@@ -169,8 +166,5 @@ function visualizeSimulationResults(questObj, threshold, fittedPsychometricParam
         videoOBJ.close();
     end
 
-
-    projectBaseDir = ISETBioJandJRootPath();
-    pdfFile = [fullfile(projectBaseDir, 'figures') filesep pdfFileName];
-    NicePlot.exportFigToPDF(pdfFile,hFig, 300);
+    NicePlot.exportFigToPDF(pdfFileName,hFig, 300);
 end
