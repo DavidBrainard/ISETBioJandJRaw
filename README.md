@@ -6,43 +6,31 @@ by Nankivil, Cottaris, & Brainard (2024, under review).
 ## Data
 
 The data are monochromatic wavefront aberration functions for the 18 subjects considered in the paper (4 mm diameter pupil), along with point spread functions (PSFs) derived from the monochromatic aberrations for various combinations of pupil size a amounts of chromatic aberration, as described in the paper.  The subjects are ordered as in the manuscript, with Subject 1 having the best optical quality, Subject 9 the median, and Subject 18 the worst. 
-  - The wavefront abberation functions are in directory data/WaveAberrations.  There is a .csv file for each subject. and a plot is provided of the monochromatic PSF corresponding to each aberration.  The file in that directory, Zernike data from eye.docx, provides information about the wavefront aberration data, including a reference to the paper in which the measurements were described. **[Need to add information about the spatial sampling in the pupil plane to the document, although one could deduce this from the fact that the pupil was 4mm. Might also explain the code that leads to the filenames - is the first number the defocus that was added to optimize Sthrel? In D or uM? What do the "astig_axis_0" versus "no_atig0" strings denote?_"]**
-  - The point spread functions are provided as .mat files in directory data.  The directories "FullVis_PSFs_20nm_SubjectX" give PSFs for a 4 mm pupil for each subject.  Each of these directories has PSFs for each of the 49 LCA/TCA combinations examined in the paper.  Additional directores for each subject have names with (e.g.) "_2p5mmEPD".  These are calculated for entrance pupil diameters of 1.5, 2.0, 2.5, 3.0, 3.5, and 4.0 mm as indicated by the string.  The paper briefly describes additional simulations for Subject 9 run at this series of pupil sizes. We provide the PSFs for all LCA/TCA combinations for each subject/pupil size as these may be useful for others wishing to extend our work.  Note that the PSFs in the directories with "_4p0mmEPD" appended are for the same 4 mm pupil size as those in the directories without an explict EPD string. These two sets of 4 mm PSFs differ slightly because of a change in how an interpolation was implemented in the calculation of the PSFs.
-  - Each individual directory contains one file for each polychromatic PSF.  The filename contains strings that give the amount of LCA in diopters (e.g., "LCA_1278" indicates 1.278 D LCA between 700 and 400 nm as described in the paper) and amount of horizontal and vertical foveal TCA (e.g. "_Hz1380_TCA_Vt2760" indictates 1.380 microns of horizontal and 2.7260 microns of vertical TCA), again as between 700 and 400 nm described in the paper.  Also as described in the paper, the amount of horizontal and vertical TCA is paired in each PSF, with the vertical being twice the horizontal.
-  - Each .mat file contains a structure, opticsParams, whose fields give the spatial support for the PSF in arcminutes, the wavelength support in nm, the pupil diameter used in calculating the PSF, and the number of microns per degree assumed for the human eye.  It also contains a variable, thePSFEnsemble, that is a 3D square array providing the polychormatic PSF. The first index is vertical rows, the second horzontal columns, and the third is wavelength. **[Check horizontal/vertical conventio an fix desription if it's backwards.]**
-
-
+  - The wavefront abberation functions are in directory "data/WaveAberrations".  There is a .csv file for each subject. and a plot is provided of the monochromatic PSF corresponding to each aberration.  The file in that directory, "Zernike data from eye.docx", provides information about the wavefront aberration data, including a reference to the paper in which the measurements were described. **[Need to add information about the spatial sampling in the pupil plane to the document, although one could deduce this from the fact that the pupil was 4mm. Might also explain the code that leads to the filenames - is the first number the defocus that was added to optimize Sthrel? In D or uM? What do the "astig_axis_0" versus "no_atig0" strings denote?_"]**
+  - The point spread functions are provided as .mat files in directory "data".  The directories "FullVis_PSFs_20nm_SubjectX" give PSFs for a 4 mm pupil for each subject.  Each of these directories has PSFs for each of the 49 LCA/TCA combinations examined in the paper.  Additional directores for each subject have names with string (e.g.) "2p5mmEPD" appended. These are calculated for entrance pupil diameters of 1.5, 2.0, 2.5, 3.0, 3.5, and 4.0 mm as indicated by the string.  The paper briefly describes additional simulations for Subject 9 run at this series of pupil sizes. We provide the PSFs for all LCA/TCA combinations for each subject/pupil size as these may be useful for others wishing to extend our work.  Note that the PSFs in the directories with "4p0mmEPD" appended are for the same 4 mm pupil size as those in the directories without an explict appended EPD string. These two sets of 4 mm PSFs differ slightly because of a change in how an interpolation was implemented in the calculation of the PSFs.
+  - Each individual directory contains one file for each polychromatic PSF.  The filename contains strings that give the amount of LCA in diopters (e.g., "LCA_1278" indicates 1.278 D LCA between 700 and 400 nm as described in the paper) and amount of horizontal and vertical foveal TCA (e.g. "Hz1380_TCA_Vt2760_TCA" indictates 1.380 microns of horizontal and 2.7260 microns of vertical TCA), again as between 700 and 400 nm described in the paper.  Also as described in the paper, the amount of horizontal and vertical TCA is paired in each PSF, with the vertical being twice the horizontal.
+  - Each .mat file contains a structure, opticsParams, whose fields give the spatial support for the PSF in arcminutes, the wavelength support in nm, the pupil diameter used in calculating the PSF, and the number of microns per degree assumed for the human eye.  It also contains a variable, "thePSFEnsemble"", that is a 3D square array providing the polychormatic PSF. The first index is vertical rows, the second horzontal columns, and the third is wavelength. **[Check horizontal/vertical convention and fix desription if it's backwards.]**
+  - The data directory also contains .mat files with the monitor spectra used in the paper simulations. The "BVAMS_White_Background.mat" contains a spectrum of all zeros and indicates the black level of the monitor, despite the word "White" in the filename.  The "BVAMS_White_Guns_At_Max.mat" file gives the monitor channel spectra at max for the low luminance condition, while "BVAMS_White_Guns_At_Max_HL_.mat" gives the channel spectra for the high luminance condition.  Each of these files contains a variable "spd"", where the first column is wavelength in nm and the second is radiance in units of Watts/[sr-m2-nm].  **[Check that these are the units, and that its not per wavelength band rather than per nm.]**
+  - The full set of point spread functions is large, so it takes a while to download the whole repository.
+  
 ## Code
-ISETBio implementation of a 4-AFC tumbling E experiment using custom PSFs and custom display SPDs.
-The simulation characterizes performance as a function of the angular size of the letter E.
 
-Noise-free cone mosaic responses to stimuli of different sizes (0.04, 0.08, and 0.104 degs) which result in different performance levels (Pcorrect: 0.26, 0.4, and 0.6) are shown below.
-These results are for a 300 msec integration time.
+The code allows simulation using ISETBio of ideal observer performance in a 4-AFC tumbling E experiment, using the PSFs and display SPDs provided in the data directory.
+	- The top level scripts are in directory "main".  The script "runTaskPaper.m" illustrates calculations for Subject 9. for a subset of the LCA/TCA combinations at 4 mm pupil diameter, low luminance condition. This script reproduces the main results of the paper, although the figure format is not production quality.  Note that there is small numerical variation run-to-run due to a different sequence of random numbers being used in each run.
+	- Comments in this script explain how to add and modify conditions, for example how to reconfigure to run all of the conditions in the paper.
+	- The script writes out figures into the directory "figures", and saves output data into directory "results". These directories are set to be ignored by git, and will be created as needed by the scripts.
+	- A set of other variants of this main script are provided, that are set up to run various control calculations (changing pupil size, L:M proportion, macular pigment density, lens density, integration time).  These results of these simulations are not presented in detail in the paper, but are discussed. The names of these scripts should make it clear what each one does, and if not the settings of the parameter values will.
+	- The script "runAll.m" executes all of the other scripts in the main directory.
+	- The directory "test" contains a test script.
+	- The directory "toolbox" contains support routines.
+	
+## Dependenes
 
-<img
-  src="/figures/noisefree.png"
-  alt="Alt text"
-  title="Noise-free cone mosaic response instances"
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
-  
----
-  
-Noisy response instances and noise-free cone mosaic responses to a 0.152 degs which results in Pcorrect = 0.95 are shown below.
-These results are also for a 300 msec integration time.
+The code depends on a set of other publicly available repositories.
+	- If you use ToolboxToolbox (https://github.com/toolboxhub/toolboxtoolbox.git), you can download this repository to your projects folder and run tbUseProject('ISETBioJandJ') to fetch other dependencies and put them on your path.  The ToolboxToolbox configuration is in directory "configuration".
+	- If you do not use ToolboxToolbox, you will need the following on your path.
+		- 1) ISETBioCSFGenerator, branch ChromAbPaper, https://github.com/isetbio/ISETBioCSFGenerator.git
+		2) isetbio, branch ChromAbPaper, https://github.com/isetbio/isetbio.git
+    	3) mQUESTPlus, https://github.com/brainardlab/mQUESTPlus.git
+        4) Palamedes Toolbox, https://palamedestoolbox.org, version 1.8.2. [This may work with more recent versions, but we run against 1.8.2. You may need to write to the Palamedes team to get that version, and because of the way Palamedes is made available, ToolboxToolbox cannot get it for you so you will need to download it.]
 
-<img
-  src="/figures/noisy.png"
-  alt="Alt text"
-  title="Noisy cone mosaic response instances"
-  style="display: inline-block; margin: 0 auto; max-width: 300px">
-
----
-
-The custom PSFs employed in these simulations are depicted below for 500nm, 550nm, and 600nm on top of the employed cone mosaic.
-
-<img
-  src="/figures/PSFsAndConeMosaic.png"
-  alt="Alt text"
-  title="Noisy cone mosaic response instances"
-  style="display: inline-block; margin: 0 auto; max-width: 30px">
-  
