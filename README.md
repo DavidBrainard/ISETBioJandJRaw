@@ -16,13 +16,13 @@ The data are monochromatic wavefront aberration functions for the 18 subjects co
 ## Code
 
 The code allows simulation using ISETBio of ideal observer performance in a 4-AFC tumbling E experiment, using the PSFs and display SPDs provided in the data directory.
-	- The top level scripts are in directory "main".  The script "runTaskPaper.m" illustrates calculations for Subject 9. for a subset of the LCA/TCA combinations at 4 mm pupil diameter, low luminance condition. This script reproduces the main results of the paper, although the figure format is not production quality.  Note that there is small numerical variation run-to-run due to a different sequence of random numbers being used in each run.
-	- Comments in this script explain how to add and modify conditions, for example how to reconfigure to run all of the conditions in the paper.
-	- The script writes out figures into the directory "figures", and saves output data into directory "results". These directories are set to be ignored by git, and will be created as needed by the scripts.
-	- A set of other variants of this main script are provided, that are set up to run various control calculations (changing pupil size, L:M proportion, macular pigment density, lens density, integration time).  These results of these simulations are not presented in detail in the paper, but are discussed. The names of these scripts should make it clear what each one does, and if not the settings of the parameter values will.
-	- The script "runAll.m" executes all of the other scripts in the main directory.
-	- The directory "test" contains a test script.
-	- The directory "toolbox" contains support routines.
+  - The top level scripts are in directory "main".  The script "runTaskPaper.m" illustrates calculations for Subject 9. for a subset of the LCA/TCA combinations at 4 mm pupil diameter, low luminance condition. This script reproduces the main results of the paper, although the figure format is not production quality.  Note that there is small numerical variation run-to-run due to a different sequence of random numbers being used in each run.
+  - Comments in this script explain how to add and modify conditions, for example how to reconfigure to run all of the conditions in the paper.
+  - The script writes out figures into the directory "figures", and saves output data into directory "results". These directories are set to be ignored by git, and will be created as needed by the scripts.
+  - A set of other variants of this main script are provided, that are set up to run various control calculations (changing pupil size, L:M proportion, macular pigment density, lens density, integration time).  These results of these simulations are not presented in detail in the paper, but are discussed. The names of these scripts should make it clear what each one does, and if not the settings of the parameter values will.
+  - The script "runAll.m" executes all of the other scripts in the main directory.
+  - The directory "test" contains a test script.
+  - The directory "toolbox" contains support routines.
 	
 ## Dependencies
 
