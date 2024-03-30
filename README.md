@@ -27,10 +27,10 @@ The code allows simulation using ISETBio of ideal observer performance in a 4-AF
 ## Dependencies
 
 The code depends on a set of other publicly available repositories.
-	- If you use ToolboxToolbox (https://github.com/toolboxhub/toolboxtoolbox.git), you can download this repository to your projects folder and run tbUseProject('ISETBioJandJ') to fetch other dependencies and put them on your path.  The ToolboxToolbox configuration is in directory "configuration".  As noted below, you will have to obtain the Palamedes Toolbox outside of Toolbox Toolbox.
-	- If you do not use ToolboxToolbox, you will need the following on your path.
-		- ISETBioCSFGenerator, branch ChromAbPaper, https://github.com/isetbio/ISETBioCSFGenerator.git
-		- ISTETBo, branch ChromAbPaper, https://github.com/isetbio/isetbio.git
-    	- mQUESTPlus, https://github.com/brainardlab/mQUESTPlus.git
-        - Palamedes Toolbox, https://palamedestoolbox.org, version 1.8.2. [This may work with more recent versions, but we run against 1.8.2. You may need to write to the Palamedes team to get that version, and because of the way Palamedes is made available, ToolboxToolbox cannot get it for you so you will need to download it.]
+  - If you use ToolboxToolbox (https://github.com/toolboxhub/toolboxtoolbox.git), you can download this repository to your projects folder and run tbUseProject('ISETBioJandJ') to fetch other dependencies and put them on your path.  The ToolboxToolbox configuration is in directory "configuration".  As noted below, you will have to obtain the Palamedes Toolbox outside of Toolbox Toolbox.
+  - If you do not use ToolboxToolbox, you will need the following on your path.
+    - ISETBioCSFGenerator, branch ChromAbPaper, https://github.com/isetbio/ISETBioCSFGenerator.git
+    - ISTETBo, branch ChromAbPaper, https://github.com/isetbio/isetbio.git
+    - mQUESTPlus, https://github.com/brainardlab/mQUESTPlus.git
+    - Palamedes Toolbox, https://palamedestoolbox.org, version 1.8.2. [This may work with more recent versions, but we run against 1.8.2. You may need to write to the Palamedes team to get that version, and because of the way Palamedes is made available, ToolboxToolbox cannot get it for you so you will need to download it.]
 
