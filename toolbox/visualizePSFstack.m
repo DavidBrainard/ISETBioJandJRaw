@@ -1,5 +1,10 @@
 % Visualize the PSF stack
-function visualizePSFstack(theOI, sampledWavelengths, psfRangeArcMin)
+function visualizePSFstack(theOI, sampledWavelengths, psfRangeArcMin, pdfFilename)
+
+    % Don't save the figure out unless the filename is passed.
+    if (nargin < 4 || isempty(pdfFilename))
+        pdfFilename = [];
+    end
   
     colsNum = 7;
     rowsNum = 3;
@@ -39,7 +44,12 @@ function visualizePSFstack(theOI, sampledWavelengths, psfRangeArcMin)
         if ((kk-1 == 20) || (k == numel(sampledWavelengths)))
             drawnow;
             pageNo = pageNo + 1;
-            NicePlot.exportFigToPDF(sprintf('PSFsPage_%d.pdf',pageNo), hFig, 300);
+
+            % Check on pdfFiledir because we should never save files in
+            % random places.  If it isn't passed, don't save it.
+            if (~isempty(pdfFilename))
+                NicePlot.exportFigToPDF(pdfFilename , hFig, 300);
+            end
         end
     end
     

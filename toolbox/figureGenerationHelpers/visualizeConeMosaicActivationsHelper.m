@@ -141,7 +141,7 @@ function visualizeConeMosaicActivationsHelper(theConeMosaic, ...
     set(ax, 'YLim', [-7 0], 'YTick', -10:1:0, 'FontSize', 16);
 
     projectBaseDir = ISETBioJandJRootPath();
-    pdfFile = [fullfile(projectBaseDir, 'figures') filesep 'ConeFundamentalsLog.pdf'];
+    pdfFile = fullfile(projectBaseDir, 'figures', 'ConeFundamentalsLog.pdf');
     NicePlot.exportFigToPDF(pdfFile,hFig, 300);
 end
 

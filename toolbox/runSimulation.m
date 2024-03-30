@@ -15,7 +15,9 @@ function [theConeMosaic,threshold] = runSimulation(params, theConeMosaic)
     % Visualization of the PSF stack
     if (~isempty(params.visualizedPSFwavelengths))
         psfRangeArcMin = 10;
-        visualizePSFstack(theCustomPSFOptics, params.visualizedPSFwavelengths, psfRangeArcMin)
+        pdfFileName = sprintf('PSFSTack_%s_Reps_%d.pdf', strrep(params.psfDataFile, '.mat', ''), nTest);
+        outputFiguresName = fullfile(params.outputFiguresDir,pdfFileName);
+        visualizePSFstack(theCustomPSFOptics, params.visualizedPSFwavelengths, psfRangeArcMin, outputFiguresName);
     end
     
     if (isempty(theConeMosaic))
