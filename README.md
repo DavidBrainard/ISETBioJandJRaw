@@ -1,5 +1,11 @@
 # ISETBioJandJ
 
+This respository contains data and code used in "Theoretical Impact of Chromatic Aberration Correction on Visual Acuity"
+by Nankivil, Cottaris, & Brainard (2024, under review).
+
+The data are monochromatic wavefront aberration functions for the 18 subjects considered in the paper (4 mm diameter pupil), along with point spread functions derived from the monochromatic aberrations for various combinations of pupil size a amounts of chromatic aberration, as described in the manuscript.  The subjects are ordered as in the manuscript, with Subject 1 having the best optical quality, Subject 9 the median, and Subject 18 the worst.  
+	The wavefront abberation functions are in directory data/WaveAberrations.  There is a .csv file for each subject. and a plot is provided of the monochromatic PSF corresponding to each aberration.  The file in that directory, Zernike data from eye.docx, provides information about the wavefront aberration data, including a reference to the paper in which the measurements were described. [Need to add information about the spatial sampling in the pupil plane to the document, although one could deduce this from the fact that the pupil was 4mm. Might also explain the code that leads to the filenames - is the first number the defocus that was added to optimize Sthrel? In D or uM? What do the "astig_axis_0" versus "no_atig0" strings denote?_"]
+	 
 ISETBio implementation of a 4-AFC tumbling E experiment using custom PSFs and custom display SPDs.
 The simulation characterizes performance as a function of the angular size of the letter E.
 
