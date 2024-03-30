@@ -1,17 +1,10 @@
 % This script calculates visual acuity for a set of specified PSFs. 
 %
-% As configured, it reproduces for Subject 9 the results in Figure X of the
-% paper.
+% As configured, it reproduces for Subject 9 the main results in the paper,
+% although as configured it only runs a subset of 25 of the 49 eye models.
+% You can add the others.
 %
-% To run this script, you need Matlab, some of its toolboxes, and the
-% following on your path.
-%     1) This repository.
-%     2) ISETBioCSFGenerator, branch ChromAbPaper, https://github.com/isetbio/ISETBioCSFGenerator.git
-%     3) isetbio, branch ChromAbPaper, https://github.com/isetbio/isetbio.git
-%     4) mQUESTPlus, https://github.com/brainardlab/mQUESTPlus.git
-%     5) Palamedes Toolbox, https://palamedestoolbox.org, version 1.8.2.
-%        [This may work with more recent versions, but we run against 1.8.2.
-%        You may need to write to the Palamedes team to get that version.]
+% 
 
 function runTask()
     % Clear out
@@ -34,18 +27,39 @@ function runTask()
     end
 
     % Parameters. These control many aspects of what gets done, particular the subject. 
+    %
+    % To run a different subject or pupil size, change 'psdDataSubdir'
+    % field below to have the desired subject number in the directory string, and the desired
+    % pupil string in the name if using other than the default 4 mm.
+    %
+    % Parameter fields below allow change of integration time, lens age,
+    % MPD, L:M:S proportion (although you won't get many S because of the
+    % tritanopic zone).
+    %
+    % Note that that the custom pupil diameter field does not affect the
+    % optical quality because we are using the PSF read from the PSF data
+    % file.  What it does is allow you to set a pupil diameter different
+    % from the one for which the PSF was computed.  What this does is allow
+    % independent control of retinal illuminance and PSF, if you want to
+    % separate the two effects.
+    % 
+    % The code in this script is reasonably clever about creating figure
+    % and results subdirectories to hold its ouput, that keep the separate
+    % conditions you might run separate.  But it may not be perfect at
+    % this, particularly if you start digging deeper into the code and
+    % customizing more things.
     params = struct(...
         'spdDataFile', 'BVAMS_White_Guns_At_Max.mat', ...           % Datafile containing the display SPDs.  Change to BVAMS_White_Guns_At_Max_HL.mat for high luminance condition.
-        'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9', ...          % Subdir where the PSF data live
-        'psfDataFile', '',...                                       % Datafile containing the PSF data
+        'psfDataSubDir', 'FullVis_PSFs_20nm_Subject9', ...          % Subdir where the PSF data live.  This determines subject number and pupil size.
+        'psfDataFile', '', ...                                      % Datafile containing the PSF data. This gets set up in the loop below for the PSFs that will be studied.
         'letterSizesNumExamined',  9, ...                           % How many sizes to use for sampling the psychometric curve (9 used in the paper)
         'maxLetterSizeDegs', 0.2, ...                               % The maximum letter size in degrees of visual angle
         'sceneUpSampleFactor', 4, ...                               % Upsample scene, so that the pixel for the smallest scene is < cone aperture
         'mosaicIntegrationTimeSeconds', 500/1000, ...               % Integration time, here 500 msec
         'nTest', 512, ...                                           % Number of trial to use for computing Pcorrect
         'thresholdP', 0.781, ...                                    % Probability correct level for estimating threshold performance
-        'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age        
-        'customMacularPigmentDensity', [], ...                      % Cstom MPD, or empty to use the default; example, 0.4
+        'customLensAgeYears', [], ...                               % Lens age in years (valid range: 20-80), or empty to use the default age of 32.        
+        'customMacularPigmentDensity', [], ...                      % Cu∂stom MPD, or empty to use the default density of 0.35; example, 0.7
         'customConeDensities', [], ...                              % Custom L-M-S ratio or empty to use default; example [0.6 0.3 0.1]
         'customPupilDiameterMM', [], ...                            % Custom pupil diameter in MM or empty to use the value from the psfDataFile
         'visualizedPSFwavelengths', [], ...                         % Vector with wavelengths for visualizing the PSF. If set to empty[] there is no visualization; example 400:20:700
@@ -54,12 +68,15 @@ function runTask()
         'visualEsOnMosaic', ~true ...                               % Flag, indicating whether to visualize E's against mosaic as function of their size
     );
 
-    % For each PSF file, we also tabulate the amount of LCA in D, and TCA
-    % in microns, rounded.
+    % This sets up the PSFs that will be run.  These get looped over.
+    %
+    % For each PSF file, we also tabulate the amount of LCA in D, and vertical TCA
+    % in microns, rounded. These numbers are used to make the figure.
     % 
-    % This code as is runs many but not all of the LCA/TCA combinations
+    % This code as configured as is runs many but not all of the LCA/TCA combinations
     % reported in the paper.  Add in the rest of the PSF data files if you
-    % want them all.
+    % want them all. You can get the names of each by looking on one of the
+    % PSF file directories, and enter in the corresponding LCA/TCA values.
     examinedPSFDataFiles = {...
         'Uniform_FullVis_LCA_0_TCA_Hz0_TCA_Vt0.mat'     , 0, 0 ; ...
         'Uniform_FullVis_LCA_1278_TCA_Hz0_TCA_Vt0.mat'  , 1.3, 0 ; ...
@@ -122,8 +139,8 @@ function runTask()
     end
 
     % Loop over all the specified PSFs.  This loop saves the data out for
-    % each PSF, as well as accumulates the threshold for each.
-    for iPSF = 1:size(examinedPSFDataFiles,1)
+    % each PSF, as well as accumulates the threshold for each.ƒget{ref
+    for iPSF = 1:1 %size(examinedPSFDataFiles,1)
         theConeMosaic = [];
         tempParams = params;
         tempParams.psfDataFile = examinedPSFDataFiles{iPSF,1};
